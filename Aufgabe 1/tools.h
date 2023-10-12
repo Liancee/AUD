@@ -3,57 +3,57 @@
 
 /***************************************************************************
  *  AskAgain
- *  Fragt den Benutzer ob das Programm geschlossen oder erneut ausgefuehrt werden soll
- *  Parameter: keine
- *  Ergebnis : Gibt eine eins zurueck, wenn die Benutzereingabe ein j/J war und eine 0, wenn sie ein n/N war.
+ *  Asks the user if the program should be closed or executed again in a specific row/column.
+ *  Parameter: none
+ *  Ergebnis : Returns a one if the user input was a j/J and a 0 if it was an n/N.
  ***************************************************************************/
 int askAgain();
 
 /***************************************************************************
  *  AskAgainPos
- *  Fragt den Benutzer ob das Programm geschlossen oder erneut ausgefuehrt werden soll in einer bestimmten Zeile/Spalte
- *  Parameter: Row, Col: Zeile und Spalte, in der die Benutzerfrage beginnt
- *  Ergebnis : Gibt eine eins zurueck, wenn die Benutzereingabe ein j/J war und eine 0, wenn sie ein n/N war.
+ *  Asks the user if the program should be closed or executed again in a specific row/column.
+ *  Parameter: Row, Col: Row and column where the user question begins.
+ *  Ergebnis: Returns a one if the user input was a j/J and a 0 if it was an n/N.
  ***************************************************************************/
 int askAgainPos(int Row, int Col);
 
 /***************************************************************************
  *  askYesOrNo
- *  Fragt den Benutzer ob nach einer Antwort (ja/nein)
- *  Parameter:
- *  Ergebnis :
+ *  Asks the user a question passed as a parameter and takes an answer (yes/no)
+ *  Parameter: question, a string that is output as a question on the screen.
+ *  Ergebnis: Returns a one if the user input was a j/J and a 0 if it was an n/N.
  ***************************************************************************/
 int askYesOrNo(char *question);
 
 /***************************************************************************
  *  clearScreen
- *  Fragt den Benutzer ob nach einer Antwort (ja/nein)
- *  Parameter:
- *  Ergebnis :
+ *  Clears the current terminal output.
+ *  Parameter: none
+ *  Ergebnis: void
  ***************************************************************************/
 void clearScreen();
 
 /***************************************************************************
- *  clearScreen
- *  Fragt den Benutzer ob nach einer Antwort (ja/nein)
- *  Parameter:
- *  Ergebnis :
+ *  waitForEnter
+ *  Awaits an enter keyboard input
+ *  Parameter: none
+ *  Ergebnis: void
  ***************************************************************************/
 void waitForEnter();
 
 /***************************************************************************
- *  ClearBuffer
+ *  clearBuffer
  *  Leert das Buffer bis zum letzten Zeilenumbruch
- *  Parameter: keine
- *  Ergebnis : nichts
+ *  Parameter: none
+ *  Ergebnis: void
  ***************************************************************************/
 void clearBuffer();
 
 /***************************************************************************
- *  ResetArray
+ *  resetArray
  *  Setzt alle Werte im Array zurueck auf 0
- *  Parameter: a, count: Pointer auf Array welches auf null/reseted werden soll und Laenge des Arrays
- *  Ergebnis : nichts
+ *  Parameter: a, count: Pointer to array which is to be nulled/reseted and length of the array.
+ *  Ergebnis: void
  ***************************************************************************/
 void resetArray(int *a, int count);
 

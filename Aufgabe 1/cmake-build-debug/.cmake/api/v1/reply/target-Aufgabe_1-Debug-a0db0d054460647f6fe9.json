@@ -2,10 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Aufgabe_1.exe"
-		},
-		{
-			"path" : "Aufgabe_1.pdb"
+			"path" : "Aufgabe_1"
 		}
 	],
 	"backtrace" : 1,
@@ -38,7 +35,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -std=gnu11 -fdiagnostics-color=always"
+					"fragment" : "-g -std=gnu11 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.6 -fcolor-diagnostics"
 				}
 			],
 			"language" : "C",
@@ -70,16 +67,12 @@
 			{
 				"fragment" : "",
 				"role" : "flags"
-			},
-			{
-				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
-				"role" : "libraries"
 			}
 		],
 		"language" : "C"
 	},
 	"name" : "Aufgabe_1",
-	"nameOnDisk" : "Aufgabe_1.exe",
+	"nameOnDisk" : "Aufgabe_1",
 	"paths" : 
 	{
 		"build" : ".",

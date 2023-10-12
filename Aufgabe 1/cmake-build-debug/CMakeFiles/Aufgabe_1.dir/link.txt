@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/cc -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.6 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/Aufgabe_1.dir/datetime.c.o CMakeFiles/Aufgabe_1.dir/ueb01.c.o CMakeFiles/Aufgabe_1.dir/tools.c.o -o Aufgabe_1 

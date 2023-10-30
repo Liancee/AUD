@@ -1,5 +1,7 @@
-#ifndef AUFGABE_2_DATETIME_H
-#define AUFGABE_2_DATETIME_H
+#ifndef DATETIME_H
+#define DATETIME_H
+
+#include "datastructure.h"
 
 /***************************************************************************
  *  getDateFromString
@@ -7,7 +9,7 @@
  *  Parameter: input, date: the user input as string and the struct object to save it in if valid.
  *  Result: Returns 1=true when the string contained a date otherwise 0=false.
  ***************************************************************************/
-int getDateFromString(char* input, sDate* date);
+int getDateFromString(char *input, sDate *date);
 
 /***************************************************************************
  *  isDateValid
@@ -25,4 +27,4 @@ int isDateValid(int day, int month, int year);
  ***************************************************************************/
 int isLeapYear(int year);
 
-#endif //AUFGABE_2_DATETIME_H
+#endif // DATETIME_H

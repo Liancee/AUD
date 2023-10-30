@@ -1,11 +1,17 @@
 CC = gcc -Wall
-PRG = ueb01
-OBJ = ueb01.o tools.o
+PRG = main
+OBJ = main.o menu.o calendar.o tools.o
 
 $(PRG): $(OBJ)
 	$(CC) -o $@ $^
 
-ueb11.o: ueb01.c tools.h
+main.o: main.c menu.h calendar.h
+	$(CC) -c $<
+
+menu.o: menu.c menu.h tools.h
+	$(CC) -c $<
+
+calendar.o: calendar.c calendar.h tools.h datastructure.h
 	$(CC) -c $<
 
 tools.o: tools.c tools.h

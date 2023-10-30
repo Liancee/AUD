@@ -1,8 +1,21 @@
-#ifndef AUFGABE_2_DATASTRUCTURE_H
-#define AUFGABE_2_DATASTRUCTURE_H
+#ifndef DATASTRUCTURE_H
+#define DATASTRUCTURE_H
 
-enum eDayOfTheWeek;
-//enum eDayOfTheWeek{NotADay, Mo, Tu, We, Th, Fr, Sa, Su};
+#define MAXAPPOINTMENTS 100
+
+extern int CountAppointments;
+
+typedef enum
+{
+    NotADay,
+    Mo,
+    Tu,
+    We,
+    Th,
+    Fr,
+    Sa,
+    Su
+} eDayOfTheWeek;
 
 typedef struct
 {
@@ -10,5 +23,19 @@ typedef struct
     eDayOfTheWeek DayOfTheWeek;
 } sDate;
 
-typedef enum { NotADay, Mo, Tu, We, Th, Fr, Sa, Su } eDayOfTheWeek;
-#endif //AUFGABE_2_DATASTRUCTURE_H
+typedef struct
+{
+    int Hours, Minutes, Seconds;
+} sTime;
+
+typedef struct
+{
+    sDate Date;
+    sTime Time;
+    char *Location;
+    sTime *Duration;
+} sAppointment;
+
+extern sAppointment Calendar[];
+
+#endif // DATASTRUCTURE_H

@@ -10,36 +10,36 @@ sAppointment Calendar[MAXAPPOINTMENTS];
 
 void CreateAppointment()
 {
-    printf("Create appointment, press Enter to continue ...\n");
+    printf("Create appointment\n\n");
     waitForEnter();
 };
 
 void EditAppointment()
 {
-    printf("Edit appointment, press Enter to continue ...\n");
+    printf("Edit appointment\n\n");
     waitForEnter();
 };
 
 void DeleteAppointment()
 {
-    printf("Delete appointment, press Enter to continue ...\n");
+    printf("Delete appointment\n\n");
     waitForEnter();
 };
 
 void SearchAppointment()
 {
-    printf("Search appointment, press Enter to continue ...\n");
+    printf("Search appointment\n\n");
     waitForEnter();
 };
 
 void SortCalendar()
 {
-    printf("Sort appointments, press Enter to continue ...\n");
+    printf("Sort appointments\n\n");
     waitForEnter();
 };
 
 void ListCalendar()
 {
-    printf("List appointments, press Enter to continue ...\n");
+    printf("List appointments\n\n");
     waitForEnter();
 };

@@ -18,10 +18,7 @@ int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
     char *tmp = equalSpam;
 
     for (int i = 0; i < titleLength; i++)
-    {
-        *tmp++ = '='; // NOTE: works?
-        // tmp++;
-    }
+        *tmp++ = '=';
 
     do
     {
@@ -30,7 +27,7 @@ int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
 
         for (int i = 0; i < countMenuItems; i++)
         {
-            printf("\t%i. %s\n\n", i + 1, menuItems[i]);
+            printf("  %i. %s\n\n", i + 1, menuItems[i]);
         }
         printf("Please enter your choice: ");
         scanRes = scanf("%i", &userChoice);
@@ -44,6 +41,8 @@ int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
     } while (!scanRes);
 
     free(equalSpam);
+    equalSpam = NULL; // NOTE: ASK USEFUL?
+    free(tmp);
     tmp = NULL; // NOTE: ASK USEFUL?
 
     return userChoice;

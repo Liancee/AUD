@@ -92,7 +92,7 @@ void waitForEnter()
       CLEAR_LINE;
     }
 
-    printf("Bitte Eingabetaste drücken...");
+    printf("Press Enter to continue ...");
     res = scanf("%c", &c);
   } while (c != '\n');
 }

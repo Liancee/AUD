@@ -1,3 +1,0 @@
-/Users/liance/Documents/bht/semester II/Algorithmen und Datenstrukturen/AUD/Aufgabe 2/cmake-build-debug/CMakeFiles/Aufgabe_2.dir
-/Users/liance/Documents/bht/semester II/Algorithmen und Datenstrukturen/AUD/Aufgabe 2/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/liance/Documents/bht/semester II/Algorithmen und Datenstrukturen/AUD/Aufgabe 2/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -43,7 +43,7 @@ void waitForEnter();
 
 /***************************************************************************
  *  clearBuffer
- *  Clears the buffer to the last '\n'
+ *  Leert das Buffer bis zum letzten Zeilenumbruch
  *  Parameter: none
  *  Ergebnis: void
  ***************************************************************************/
@@ -51,7 +51,7 @@ void clearBuffer();
 
 /***************************************************************************
  *  resetArray
- *  Resets all values in an array back to 0
+ *  Setzt alle Werte im Array zurueck auf 0
  *  Parameter: a, count: Pointer to array which is to be nulled/reseted and length of the array.
  *  Ergebnis: void
  ***************************************************************************/

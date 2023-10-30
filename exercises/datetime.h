@@ -1,5 +1,5 @@
-#ifndef AUFGABE_1_DATETIME_H
-#define AUFGABE_1_DATETIME_H
+#ifndef AUFGABE_2_DATETIME_H
+#define AUFGABE_2_DATETIME_H
 
 /***************************************************************************
  *  getDateFromString
@@ -12,10 +12,10 @@ int getDateFromString(char* input, sDate* date);
 /***************************************************************************
  *  isDateValid
  *  Validates a date given as parameter.
- *  Parameter: date: pointer to the date struct with the set integer for day, month and year.
+ *  Parameter: day, month, year: Individual integers for day, month & year.
  *  Result: Returns 1=true if the date is valid otherwise 0=false.
  ***************************************************************************/
-int isDateValid(sDate* date);
+int isDateValid(int day, int month, int year);
 
 /***************************************************************************
  *  isLeapYear
@@ -25,4 +25,4 @@ int isDateValid(sDate* date);
  ***************************************************************************/
 int isLeapYear(int year);
 
-#endif //AUFGABE_1_DATETIME_H
+#endif //AUFGABE_2_DATETIME_H

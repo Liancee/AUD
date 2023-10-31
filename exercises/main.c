@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "menu.h"
 #include "calendar.h"
+#include "tools.h"
 
 int main()
 {
@@ -27,6 +28,10 @@ int main()
         printf("ToDo: ");
         switch (userChoice)
         {
+	case 0:
+	    printf("Parameter error for GetMenu() method! Program will exit, ");
+	    waitForEnter();
+	    return 0;
         case 1:
             CreateAppointment();
             break;

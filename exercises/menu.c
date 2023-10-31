@@ -32,7 +32,7 @@ int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
         printf("Please enter your choice: ");
         scanRes = scanf("%i", &userChoice);
         clearBuffer();
-        if (userChoice > countMenuItems)
+        if (userChoice > countMenuItems || userChoice <= 0)
         {
             printf("\nNo option with that number! ");
             scanRes = 0;

@@ -49,6 +49,9 @@ int main()
             return 0;
 
         default:
+            /* Could also handle wrong user input here instead of in menu.c cuz default would be exactly
+            that => (if (userChoice > countMenuItems || userChoice <= 0)) but the task literally says it
+            has to be handled in the GetMenu() method in menu.c*/
             return 0;
         }
     } while (userChoice);

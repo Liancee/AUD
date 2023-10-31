@@ -6,6 +6,12 @@
 #define MENU_H
 
 /***************************************************************************
+ *  This module contains methods to display a menu
+  Detailed information about each method and its arguments will be provided
+  seperately.
+ ***************************************************************************/
+
+/***************************************************************************
  *  GetMenu
  *  Method that outputs a given title for a menu and the given submenu,
  *      afterwards returns the selection of the submenu chosen by the user

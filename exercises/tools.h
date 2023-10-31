@@ -2,6 +2,11 @@
 #define TOOLS_H
 
 /***************************************************************************
+ *  This module contains various methods and/or definitions which are used within exercises.
+  Detailed information about each method and its arguments will be provided separately.
+ ***************************************************************************/
+
+/***************************************************************************
  *  askAgain
  *  Asks the user if the program should be closed or executed again in a specific row/column.
  *  Parameter: None

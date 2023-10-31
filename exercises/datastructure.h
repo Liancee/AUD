@@ -1,6 +1,10 @@
 #ifndef DATASTRUCTURE_H
 #define DATASTRUCTURE_H
 
+/***************************************************************************
+ *  This module contains various data structures, enumerations.
+ ***************************************************************************/
+
 #define MAXAPPOINTMENTS 100
 
 extern int CountAppointments;

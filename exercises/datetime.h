@@ -4,6 +4,12 @@
 #include "datastructure.h"
 
 /***************************************************************************
+ *  This module contains methods around common date related tasks
+  such as parsing, input correctness, etc. which are used within exercises.
+  Detailed information about each method and its arguments will be provided separately.
+ ***************************************************************************/
+
+/***************************************************************************
  *  getDateFromString
  *  Checks if a given string contains a valid date or not.
  *  Parameter: input, date: the user input as string and the struct object to save it in if valid.

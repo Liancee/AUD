@@ -6,6 +6,11 @@
 #define CALENDAR_H
 
 /***************************************************************************
+ *  This module contains methods to manipulate an appointment in many different ways.
+  Detailed information about each method and its arguments will be provided seperately.
+ ***************************************************************************/
+
+/***************************************************************************
  *  CreateAppointment
  *  Creates an appointment.
  *  Parameter: None

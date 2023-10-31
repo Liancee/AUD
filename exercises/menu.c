@@ -34,16 +34,16 @@ int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
         clearBuffer();
         if (userChoice > countMenuItems)
         {
-            printf("\nNo option with that number, please enter again!");
+            printf("\nNo option with that number! ");
             scanRes = 0;
+            waitForEnter();
         }
 
     } while (!scanRes);
 
     free(equalSpam);
     equalSpam = NULL; // NOTE: ASK USEFUL?
-    free(tmp);
-    tmp = NULL; // NOTE: ASK USEFUL?
+    tmp = NULL;       // NOTE: ASK USEFUL?
 
     return userChoice;
 }

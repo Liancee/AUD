@@ -11,7 +11,9 @@ int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
     if (!menuTitle || !menuItems || countMenuItems <= 0)
         return 0;
 
-    int scanRes = 0, userChoice, titleLength = strlen(menuTitle);
+    int scanRes = 0;
+    int userChoice = 0;
+    int titleLength = strlen(menuTitle);
     char *equalSpam = malloc(titleLength * sizeof(char)); // There is printLine function now.. Why did I do this exactly? Practice Ig..
     if (!equalSpam)
         return 0;

@@ -36,8 +36,9 @@ typedef struct
 {
     sDate Date;
     sTime Time;
-    char *Location;
-    sTime *Duration;
+    char* Description;
+    char* Location;
+    sTime* Duration;
 } sAppointment;
 
 extern sAppointment Calendar[];

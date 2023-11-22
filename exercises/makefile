@@ -1,6 +1,6 @@
 CC = gcc -Wall
 PRG = main
-OBJ = main.o menu.o calendar.o tools.o
+OBJ = main.o menu.o calendar.o tools.o datetime.o
 
 $(PRG): $(OBJ)
 	$(CC) -o $@ $^
@@ -8,13 +8,16 @@ $(PRG): $(OBJ)
 main.o: main.c menu.h calendar.h
 	$(CC) -c $<
 
-menu.o: menu.c menu.h tools.h
+menu.o: menu.c menu.h tools.h escapesequenzen.h
 	$(CC) -c $<
 
-calendar.o: calendar.c calendar.h tools.h datastructure.h
+calendar.o: calendar.c calendar.h tools.h datastructure.h datetime.h
 	$(CC) -c $<
 
-tools.o: tools.c tools.h
+datetime.o: datetime.c datetime.h tools.h datastructure.h escapesequenzen.h
+	$(CC) -c $<
+
+tools.o: tools.c tools.h datetime.h
 	$(CC) -c $<
 
 clean:

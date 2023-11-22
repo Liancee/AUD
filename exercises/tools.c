@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 #include "escapesequenzen.h"
+#include "datetime.h"
+
+void CharReplace(char*, char, char);
 
 void clearBuffer()
 {
@@ -58,7 +63,7 @@ int askAgainPos(int row, int col)
     // If input is n/N program exits
     if (c == 'n' || c == 'N')
     {
-      // printf("Programm wird beendet.\n");
+      // printf("Program will exit now.\n");
       // exit(0);
 
       return 0;
@@ -130,7 +135,7 @@ int askYesOrNo(char *question)
     // If input is n/N program exits
     if (c == 'n' || c == 'N')
     {
-      // printf("Programm wird beendet.\n");
+      // printf("Program will exit now.\n");
       // exit(0);
 
       return 0;
@@ -150,4 +155,55 @@ void printLine(char c, int count)
     printf("%c", c);
 
   fflush(stdout);
+}
+
+void GetText(char* prompt, int len, char* text, int isEmptyEntryAllowed)
+{
+
+  PrintPrompt(prompt);
+  STORE_POS;
+
+  int isInputValid = 0;
+  char* input = calloc(len, sizeof(char));
+
+  do
+  {
+    RESTORE_POS;
+    FORECOLOR_YELLOW;
+    printf("%-*s", 160, "Enter text here.");
+    RESTORE_POS;
+    FORECOLOR_WHITE;
+    isInputValid = scanf(" %99[^\n]", input); // reads til \n or 99 chars
+    clearBuffer();
+
+    if (isInputValid)
+    {
+      RESTORE_POS;
+      if (!(!*input && !isEmptyEntryAllowed))
+      {
+        text = malloc(strlen(input));
+        strcpy(text, input);
+
+        printf("%-*s\n", 100, text);
+      }
+      else
+      {
+        printf("Entry is invalid! isEmptyEntryAllowed is 0 so there must be an entry of at least one character. ");
+        waitForEnter();
+      }
+    }
+  } while (!isInputValid || (!*input && !isEmptyEntryAllowed));
+  free(input);
+}
+
+void CharReplace(char* input, char toBeReplaced, char replacement)
+{
+  int i;
+
+  if (input == NULL)
+    return;
+
+  for (i = 0; input[i] != '\0'; i++)
+    if (input[i] == toBeReplaced)
+      input[i] = replacement;
 }

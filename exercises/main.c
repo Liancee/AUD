@@ -28,7 +28,7 @@ int main()
         switch (userChoice)
         {
             case 0:
-                printf("Parameter error for GetMenu() method! Program will exit, ");
+                printf("Parameter error for GetMenu() method! Program will exit.");
                 waitForEnter();
                 return 0;
             case 1:

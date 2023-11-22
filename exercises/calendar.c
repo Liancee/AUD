@@ -14,12 +14,20 @@ void CreateAppointment()
 {
   clearScreen();
   char* title = "Appointment creator";
-  char* prompt = "%-12s: ";
+
+  sAppointment appointment;
 
   printf("%s\n", title);
   printLine('=', strlen(title));
   printf("\n\n");
-  GetDate("%-12s: ");
+
+  GetDate("Date", &appointment.Date);
+
+  GetTime("Time", &appointment.Time);
+
+  GetText("Description", 100, appointment.Description, 0);
+
+  GetText("Location", 15, appointment.Location, 0);
 
   waitForEnter();
 

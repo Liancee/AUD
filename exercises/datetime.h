@@ -49,4 +49,12 @@ void GetDate(char* prompt, sDate* date);
  ***************************************************************************/
 void GetTime(char* prompt, sTime* time);
 
+/***************************************************************************
+ *  PrintPrompt
+ *  short description
+ *  Parameter:
+ *  Result:
+ ***************************************************************************/
+void PrintPrompt(char* prompt);
+
 #endif // DATETIME_H

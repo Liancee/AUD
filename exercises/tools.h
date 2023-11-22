@@ -71,4 +71,12 @@ void resetArray(int *a, int count);
  ***************************************************************************/
 void printLine(char c, int count);
 
+/***************************************************************************
+ *  GetText
+ *  short description
+ *  Parameter:
+ *  Result:
+ ***************************************************************************/
+void GetText(char* prompt, int len, char* text, int isEmptyEntryAllowed);
+
 #endif // TOOLS_H

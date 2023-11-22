@@ -33,4 +33,20 @@ int isDateValid(int day, int month, int year);
  ***************************************************************************/
 int isLeapYear(int year);
 
+/***************************************************************************
+ *  GetDate
+ *  short description
+ *  Parameter:
+ *  Result:
+ ***************************************************************************/
+void GetDate(char* prompt, sDate* date);
+
+/***************************************************************************
+ *  GetTime
+ *  short description
+ *  Parameter:
+ *  Result:
+ ***************************************************************************/
+void GetTime(char* prompt, sTime* time);
+
 #endif // DATETIME_H

@@ -44,8 +44,8 @@ int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
     } while (!scanRes);
 
     free(equalSpam);
-    equalSpam = NULL; // NOTE: ASK USEFUL?
-    tmp = NULL;       // NOTE: ASK USEFUL?
+    equalSpam = NULL;
+    tmp = NULL;
     
     return userChoice;
 }

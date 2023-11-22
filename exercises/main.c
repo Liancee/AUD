@@ -10,7 +10,7 @@
 int main()
 {
     int userChoice = 0;
-    char *menuTitle = "Terminverwaltung V 0.2";
+    char *menuTitle = "Appointment manager V 0.2";
     char *menuItems[] = {
         "Create appointment",
         "Edit appointment",
@@ -25,39 +25,42 @@ int main()
     {
         userChoice = GetMenu(menuTitle, menuItems, countMenuItems);
 
-        printf("ToDo: ");
         switch (userChoice)
         {
-	case 0:
-	    printf("Parameter error for GetMenu() method! Program will exit, ");
-	    waitForEnter();
-	    return 0;
-        case 1:
-            CreateAppointment();
-            break;
-        case 2:
-            EditAppointment();
-            break;
-        case 3:
-            DeleteAppointment();
-            break;
-        case 4:
-            SearchAppointment();
-            break;
-        case 5:
-            SortCalendar();
-            break;
-        case 6:
-            ListCalendar();
-            break;
-        case 7:
-            return 0;
+            case 0:
+                printf("Parameter error for GetMenu() method! Program will exit, ");
+                waitForEnter();
+                return 0;
+            case 1:
+                CreateAppointment();
+                break;
+            case 2:
+                printf("ToDo: ");
+                EditAppointment();
+                break;
+            case 3:
+                printf("ToDo: ");
+                DeleteAppointment();
+                break;
+            case 4:
+                printf("ToDo: ");
+                SearchAppointment();
+                break;
+            case 5:
+                printf("ToDo: ");
+                SortCalendar();
+                break;
+            case 6:
+                ListCalendar();
+                break;
+            case 7:
+                return 0;
 
-        default:
-            /* Could also handle wrong user input here instead of in menu.c cuz default would be exactly
-            that => (if (userChoice > countMenuItems || userChoice <= 0)) but the task literally says it
-            has to be handled in the GetMenu() method in menu.c*/
-            return 0;
+            default:
+                /* Could also handle wrong user input here instead of in menu.c cuz default would be exactly
+                that => (if (userChoice > countMenuItems || userChoice <= 0)) but the task literally says it
+                has to be handled in the GetMenu() method in menu.c*/
+                return 0;
         }
     } while (userChoice);
 

@@ -2,15 +2,25 @@
 #include <stdlib.h>
 #include "datastructure.h"
 
+void GetDate(char* prompt, sDate* date)
+{
+
+}
+
+void GetTime(char* prompt, sTime* time)
+{
+
+}
+
 int isLeapYear(int year)
 {
-  //durch 4 teilbar, nicht durch 100 aber durch 400
+  //dividable by 4, not by 100 but by 400
   return ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0));
 }
 
 int isDateValid(int day, int month, int year)
 {
-  // Gucken ob es ein legitimes Datum ist, auch wenn Schaltjahr
+  // Check for valid date even when it is a leap year
   // Check if the day, month, and year are within valid ranges
   if (day < 1 || month < 1 || month > 12 || year < 0)
     return 0;
@@ -28,7 +38,7 @@ int isDateValid(int day, int month, int year)
 
 int getDateFromString(char* input, sDate* date)
 {
-  // in einzelne ints parsen und in sDate speichern sonst falsch wieder geben
+  // parse into individual ints so we can save them in sDate else we return 0 (false)
   char* pDay = input;
   char* pMonth = 0;
   char* pYear = 0;

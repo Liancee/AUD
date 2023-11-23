@@ -11,6 +11,7 @@ int CountAppointments;
 sAppointment Calendar[MAXAPPOINTMENTS];
 
 void printFunctionHeader(char*);
+char* getAppointmentDay(eDayOfTheWeek);
 
 void CreateAppointment()
 {
@@ -79,20 +80,17 @@ void printFunctionHeader(char* title)
     printf("\n\n");
 }
 
-char[] getAppointmentDay(eDayOfTheWeek dayOfTheWeek)
+char* getAppointmentDay(eDayOfTheWeek dayOfTheWeek)
 {
-
         switch (dayOfTheWeek)
         {
             case 1: return "Mo";
             case 2: return "Tu";
             case 3: return "We";
-            case 4: return "";
-            case 5: return "";
-            case 6: return "";
-            case 7: return "";
-            default: return
-            NotADay; // Error
+            case 4: return "Th";
+            case 5: return "Fr";
+            case 6: return "Sa";
+            case 7: return "Su";
+            default: return "NotADay";
         }
-    return
 }

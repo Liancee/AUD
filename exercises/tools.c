@@ -6,75 +6,67 @@
 #include "datetime.h"
 
 void CharReplace(char*, char, char);
+int askAgainInternal();
+void waitForEnter();
 
 void clearBuffer()
 {
-  char dummy;
-
-  do
-    scanf("%c", &dummy);
-  while (dummy != '\n');
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF);
 }
 
 int askAgain()
 {
-  int res;
-  char c;
+  int isInputValid = 1;
 
   do
   {
-    printf("Moechten Sie noch einmal (j/n)? ");
-    res = scanf("%c", &c);
-    if (c != '\n')
-      clearBuffer();
-
-    // If input is n/N program exits
-    if (c == 'n' || c == 'N')
+    if (!isInputValid)
     {
-      // printf("Programm wird beendet.\n");
-      // exit(0);
-
-      return 0;
+      printf("Incorrect input, please enter 'y/Y' or 'n/N' when prompted! ");
+      waitForEnter();
     }
-    // Inner while loop repeats since input is neither j/J nor n/N
-    else if (c != 'j' && c != 'J')
-      printf("Falsche Eingabe! Bitte 'j/J' oder 'n/N' eigeben!\n");
-
-    // If input was j/J, main while loop will just repeat
-  } while (res == 0 || (c != 'j' && c != 'J' && c != 'n' && c != 'N'));
-
+    isInputValid = askAgainInternal();
+  } while (!isInputValid);
   return 1;
 }
 
 int askAgainPos(int row, int col)
 {
-  int res;
-  char c;
-
-  POSITION(row, col);
+  int isInputValid = 1;
 
   do
   {
-    printf("Moechten Sie noch einmal (j/n)? ");
-    res = scanf("%c", &c);
-    if (c != '\n')
-      clearBuffer();
-
-    // If input is n/N program exits
-    if (c == 'n' || c == 'N')
+    POSITION(row, col);
+    if (!isInputValid)
     {
-      // printf("Program will exit now.\n");
-      // exit(0);
-
-      return 0;
+      printf("Incorrect input, please enter 'y/Y' or 'n/N' when prompted! ");
+      waitForEnter();
+      POSITION(row, col);
+      printf("%-*s", 100, "");
+      POSITION(row, col);
     }
-    // Inner while loop repeats since input is neither j/J nor n/N
-    else if (c != 'j' && c != 'J')
-      printf("Falsche Eingabe! Bitte 'j/J' oder 'n/N' eigeben!\n");
-
-    // If input was j/J, main while loop will just repeat
-  } while (res == 0 || (c != 'j' && c != 'J' && c != 'n' && c != 'N'));
+    isInputValid = askAgainInternal();
+  } while (!isInputValid);
   return 1;
+}
+
+int askAgainInternal()
+{
+  printf("Restart(y/n)?: ");
+
+  char c = 0;
+  int isInputValid = scanf("%c", &c);
+  if (!isInputValid || (c != 'j' && c != 'J' && c != 'n' && c != 'N'))
+  {
+    clearBuffer();
+    return 0;
+  }
+  else if (c == 'n' || c == 'N')
+    exit(0);
+  else if (c == 'y' || c == 'Y')
+    return 1;
+  else return 0; // we should never be here
 }
 
 void resetArray(int *a, int count)

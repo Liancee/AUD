@@ -165,6 +165,8 @@ void GetText(char* prompt, int len, char* text, int isEmptyEntryAllowed)
 
   int isInputValid = 0;
   char* input = calloc(len, sizeof(char));
+  if (!input)
+    return;
 
   do
   {

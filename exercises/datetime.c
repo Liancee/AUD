@@ -21,6 +21,9 @@ void GetDate(char* prompt, sDate* date)
 
   int scanRes = 0, isDateValid = 0;
   char* input = malloc(20);
+  if (!input)
+      return;
+
 
   do
   {
@@ -154,6 +157,8 @@ void GetTime(char* prompt, sTime* time)
 
   int scanRes = 0, isTimeValid = 0;
   char* input = malloc(20);
+  if (!input)
+    return;
 
   do
   {
@@ -167,6 +172,7 @@ void GetTime(char* prompt, sTime* time)
 
     if (scanRes)
     {
+      // TODO: empty input should also be allowed => NULL Pointer
       isTimeValid = getTimeFromString(input, time);
       RESTORE_POS;
       if (isTimeValid)

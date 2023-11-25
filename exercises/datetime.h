@@ -39,7 +39,7 @@ int isLeapYear(int year);
  *  Parameter:
  *  Result:
  ***************************************************************************/
-void GetDate(char* prompt, sDate* date);
+int GetDate(char* prompt, sDate* date);
 
 /***************************************************************************
  *  GetTime
@@ -47,7 +47,7 @@ void GetDate(char* prompt, sDate* date);
  *  Parameter:
  *  Result:
  ***************************************************************************/
-void GetTime(char* prompt, sTime* time);
+int GetTime(char* prompt, sTime* time);
 
 /***************************************************************************
  *  PrintPrompt

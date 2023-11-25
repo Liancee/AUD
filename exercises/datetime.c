@@ -14,16 +14,18 @@ int getTimeFromString(char*, sTime*);
 int isTimeValid(int, int, int);
 
 
-void GetDate(char* prompt, sDate* date)
+int GetDate(char* prompt, sDate* date)
 {
+  if (!date)
+    return 0;
+
+  int isInputValid = 0, isDateValid = 0;
+  char* input = calloc(1, sizeof("dd.mm.yyyy"));
+  if (!input)
+    return 0;
+
   PrintPrompt(prompt);
   STORE_POS;
-
-  int scanRes = 0, isDateValid = 0;
-  char* input = malloc(20);
-  if (!input)
-      return;
-
 
   do
   {
@@ -32,10 +34,10 @@ void GetDate(char* prompt, sDate* date)
     printf("%-*s", 50, "dd.mm.yyyy");
     RESTORE_POS;
     FORECOLOR_WHITE;
-    scanRes = scanf("%19[^\n]", input);
+    isInputValid = scanf("%11[^\n]", input);
     clearBuffer();
 
-    if (scanRes)
+    if (isInputValid)
     {
       isDateValid = getDateFromString(input, date);
       RESTORE_POS;
@@ -47,7 +49,8 @@ void GetDate(char* prompt, sDate* date)
         waitForEnter();
       }
     }
-  } while (!scanRes || !isDateValid);
+  } while (!isInputValid || !isDateValid);
+  return 1;
 }
 
 void PrintPrompt(char* prompt)
@@ -150,52 +153,60 @@ eDayOfTheWeek getDayOfWeek(sDate* date)
 }
 
 
-void GetTime(char* prompt, sTime* time)
+int GetTime(char* prompt, sTime* time)
 {
+  if (!time)
+    time = malloc(sizeof(sTime));//return 0;
+
+  int isInputValid = 0, isTimeValid = 0;
+  char* input = calloc(sizeof("hh:mm:ss"), sizeof(char));
+  if (!input)
+    return 0;
+
   PrintPrompt(prompt);
   STORE_POS;
-
-  int scanRes = 0, isTimeValid = 0;
-  char* input = malloc(20);
-  if (!input)
-    return;
 
   do
   {
     RESTORE_POS;
     FORECOLOR_YELLOW;
-    printf("%-*s", 50, "hh:mm[:ss]");
+    printf("%-*s", 160, "hh:mm[:ss]");
     RESTORE_POS;
     FORECOLOR_WHITE;
-    scanRes = scanf("%19[^\n]", input);
+    isInputValid = scanf("%8[^\n]", input);
     clearBuffer();
 
-    if (scanRes)
+    if (isInputValid)
     {
       // TODO: empty input should also be allowed => NULL Pointer
+
       isTimeValid = getTimeFromString(input, time);
       RESTORE_POS;
       if (isTimeValid)
-        if(!time->Seconds)
+      {
+        if(time->Seconds == -1)
           printf("%02i:%02i     \n", time->Hours, time->Minutes);
-        else printf("%02i:%02i:%02i  \n", time->Hours, time->Minutes, time->Seconds);
+        else
+          printf("%02i:%02i:%02i  \n", time->Hours, time->Minutes, time->Seconds);
+      }
       else
       {
         printf("Time is invalid! Note that seconds are [optional] (hh:mm or hh:mm:ss). ");
         waitForEnter();
       }
     }
-  } while (!scanRes || !isTimeValid);
+  } while (!isInputValid || !isTimeValid);
   free(input);
+  return 1;
 }
 
 int getTimeFromString(char* input, sTime* time)
 {
   char* pHour = input;
-  char* pMin = 0;
-  char* pSec = 0;
+  char* pMin = NULL;
+  char* pSec = NULL;
 
-  int hour = 0, min = 0, sec = 0;
+  int hour = 0, min = 0, sec = -1;
 
   // hh:mm[:ss] set pointer to first ':' cuz right after start the minutes
   while(*input != ':')
@@ -208,13 +219,14 @@ int getTimeFromString(char* input, sTime* time)
   // set minute pointer
   pMin = ++input;
 
-  // as above set pointer to second ':' cuz right after start the year
+  // as above set pointer to second ':' cuz right after start the seconds
   while(*input != ':')
   {
     if(*input == '\0')
       break;
     input++;
   }
+
   // if specified set seconds pointer and parse it to int
   if(*input != '\0')
   {
@@ -232,8 +244,7 @@ int getTimeFromString(char* input, sTime* time)
   {
     time->Hours = hour;
     time->Minutes = min;
-    if (sec)
-      time->Seconds = sec;
+    time->Seconds = sec;
 
     return 1;
   }
@@ -243,5 +254,5 @@ int getTimeFromString(char* input, sTime* time)
 // Check if the hour, month, and Sec are within valid ranges
 int isTimeValid(int hour, int min, int sec)
 {
-  return (hour >= 0 && (min >= 0 && min < 60) && (sec >= 0 && sec < 60));
+  return (hour >= 0 && (min >= 0 && min < 60) && (sec >= -1 && sec < 60));
 }

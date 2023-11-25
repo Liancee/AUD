@@ -77,6 +77,6 @@ void printLine(char c, int count);
  *  Parameter:
  *  Result:
  ***************************************************************************/
-void GetText(char* prompt, int len, char* text, int isEmptyEntryAllowed);
+int GetText(char* prompt, int len, char* text, int isEmptyEntryAllowed);
 
 #endif // TOOLS_H

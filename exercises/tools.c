@@ -5,7 +5,6 @@
 #include "escapesequenzen.h"
 #include "datetime.h"
 
-void CharReplace(char*, char, char);
 int askAgainInternal();
 void waitForEnter();
 
@@ -23,7 +22,7 @@ int askAgain()
   {
     if (!isInputValid)
     {
-      printf("Incorrect input, please enter 'y/Y' or 'n/N' when prompted! ");
+      printf("Invalid input! Please enter 'y/Y' or 'n/N' when prompted! ");
       waitForEnter();
     }
     isInputValid = askAgainInternal();
@@ -40,7 +39,7 @@ int askAgainPos(int row, int col)
     POSITION(row, col);
     if (!isInputValid)
     {
-      printf("Incorrect input, please enter 'y/Y' or 'n/N' when prompted! ");
+      printf("Invalid input! Please enter 'y/Y' or 'n/N' when prompted! ");
       waitForEnter();
       POSITION(row, col);
       printf("%-*s", 100, "");
@@ -79,19 +78,13 @@ void resetArray(int *a, int count)
 
 void waitForEnter()
 {
-  char c;
-  int res = -1;
+  char c = 0;
+
+  printf("Press Enter to continue ...");
 
   do
-  {
-    if (res != -1)
-    {
-      CLEAR_LINE;
-    }
-
-    printf("Press Enter to continue ...");
-    res = scanf("%c", &c);
-  } while (c != '\n');
+    scanf("%1c", &c);
+  while (c != '\n');
 }
 
 void clearScreen()
@@ -107,12 +100,12 @@ void clearScreen()
 
 int askYesOrNo(char *question)
 {
-  char c;
-  int res = -1;
+  char c = 0;
+  int isInputValid = 1;
 
   do
   {
-    if (res != -1)
+    if (!isInputValid)
     {
       CLEAR_LINE;
       UP_LINE;
@@ -120,25 +113,21 @@ int askYesOrNo(char *question)
     }
 
     printf("%s", question);
-    res = scanf("%c", &c);
+    scanf("%c", &c);
     if (c != '\n')
       clearBuffer();
 
-    // If input is n/N program exits
     if (c == 'n' || c == 'N')
-    {
-      // printf("Program will exit now.\n");
-      // exit(0);
-
       return 0;
+    else if (c == 'y' || c == 'Y')
+      return 1;
+    else
+    {
+      printf("Invalid input! Please enter 'y/Y' or 'n/N' when prompted! ");
+      waitForEnter();
+      isInputValid = 0;
     }
-    // Inner while loop repeats since input is neither j/J nor n/N
-    else if (c != 'j' && c != 'J')
-      printf("Falsche Eingabe! Bitte 'j/J' oder 'n/N' eigeben!\n");
-
-    // If input was j/J, main while loop will just repeat
-  } while (res == 0 || (c != 'j' && c != 'J' && c != 'n' && c != 'N'));
-  return 1;
+  } while (!isInputValid);
 }
 
 void printLine(char c, int count)
@@ -149,16 +138,21 @@ void printLine(char c, int count)
   fflush(stdout);
 }
 
-void GetText(char* prompt, int len, char* text, int isEmptyEntryAllowed)
+int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
 {
+  int isInputValid = 0, len;
+  char format[15];
+  if (maxLen <= 0 || !text)
+    return 0;
+
+  char* input = calloc(maxLen + 1, sizeof(char));
+  if (!input)
+    return 0;
+
+  sprintf(format, "%%%i[^\n]", maxLen);
 
   PrintPrompt(prompt);
   STORE_POS;
-
-  int isInputValid = 0;
-  char* input = calloc(len, sizeof(char));
-  if (!input)
-    return;
 
   do
   {
@@ -167,27 +161,38 @@ void GetText(char* prompt, int len, char* text, int isEmptyEntryAllowed)
     printf("%-*s", 160, "Enter text here.");
     RESTORE_POS;
     FORECOLOR_WHITE;
-    isInputValid = scanf(" %99[^\n]", input); // reads til \n or 99 chars
+
+    isInputValid = scanf(format, input);
     clearBuffer();
 
     if (isInputValid)
     {
-      RESTORE_POS;
-      if (!(!*input && !isEmptyEntryAllowed))
+      len = strlen(input);
+      if (len > 0)
       {
-        text = malloc(strlen(input));
-        strcpy(text, input);
-
-        printf("%-*s\n", 100, text);
+        *text = malloc(len + 1);
+        if (*text)
+          strcpy(*text, input);
       }
       else
       {
-        printf("Entry is invalid! isEmptyEntryAllowed is 0 so there must be an entry of at least one character. ");
-        waitForEnter();
+        if (!isEmptyInputAllowed) // why am I not getting here when only enter is pressed?
+        {
+          RESTORE_POS;
+          printf("Invalid input! Empty input is not allowed. ");
+          waitForEnter();
+          isInputValid = 0;
+        }
       }
     }
-  } while (!isInputValid || (!*input && !isEmptyEntryAllowed));
+    else
+    {
+      if (isEmptyInputAllowed)
+        isInputValid = 1;
+    }
+  } while (!isInputValid);
   free(input);
+  return isInputValid;
 }
 
 void CharReplace(char* input, char toBeReplaced, char replacement)

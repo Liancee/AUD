@@ -3,9 +3,11 @@
 //
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "tools.h"
 #include "datastructure.h"
 #include "datetime.h"
+#include "escapesequenzen.h"
 
 int CountAppointments;
 sAppointment Calendar[MAXAPPOINTMENTS];
@@ -15,21 +17,26 @@ char* getAppointmentDay(eDayOfTheWeek);
 
 void CreateAppointment()
 {
-  sAppointment appointment;
+  sAppointment* appointment = calloc(1, sizeof(sAppointment));
 
   printFunctionHeader("Appointment creator");
 
-  GetDate("Date", &appointment.Date);
+  STORE_POS;
+  printf("  %-12s:\n  %-12s:\n  %-12s:\n  %-12s:\n  %-12s:", "Date", "Time", "Description", "Location", "Duration");
+  RESTORE_POS;
 
-  GetTime("Time", &appointment.Time);
+  GetDate("Date", &(Calendar[CountAppointments].Date)); // why no *appointment.Date ?
+  GetTime("Time", &(Calendar[CountAppointments].Time)); // &appointment->Time
 
-  GetText("Description", 100, appointment.Description, 0);
+  GetText("Description", 100, &(appointment->Description), 1);
 
-  GetText("Location", 15, appointment.Location, 0);
+  GetText("Location", 15, &(Calendar[CountAppointments].Location), 0);
 
-  GetTime("Duration", appointment.Duration);
+  Calendar[CountAppointments].Duration = malloc(sizeof(sTime));
+  GetTime("Duration", Calendar[CountAppointments].Duration);
 
-  Calendar[CountAppointments++] = appointment;
+  Calendar[CountAppointments++] = *appointment;
+  free(appointment);
 };
 
 void EditAppointment()
@@ -62,14 +69,15 @@ void ListCalendar()
     printLine('=', 78);
     printf("\n");
     sAppointment* pCal = Calendar;
+    sDate* dates = malloc(CountAppointments);
 
     while (pCal++)
     {
+      // would asking if dates has entries and if not save the first be more efficient or directly taking dates and comparing?
         printf("%s, %02i.%02i.%04i", getAppointmentDay(pCal->Date.DayOfTheWeek), pCal->Date.Day, pCal->Date.Month, pCal->Date.Year);
     }
-    // TODO: implement this
-    printf("List appointments\n\n");
-    waitForEnter();
+
+    free(dates);
 };
 
 void printFunctionHeader(char* title)

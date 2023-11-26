@@ -9,7 +9,7 @@ void PrintPrompt(char*);
 int getDateFromString(char*, sDate*);
 int isDateValid(int, int, int);
 int isLeapYear(int);
-eDayOfTheWeek getDayOfWeek(sDate*);
+eDayOfTheWeek getDayOfWeek(int day, int month, int year);
 int getTimeFromString(char*, sTime*);
 int isTimeValid(int, int, int);
 
@@ -99,7 +99,7 @@ int getDateFromString(char* input, sDate* date)
     date->Day = day;
     date->Month = month;
     date->Year = year;
-    date->DayOfTheWeek = getDayOfWeek(date);
+    date->DayOfTheWeek = getDayOfWeek(day, month, year);
 
     return 1;
   }
@@ -130,15 +130,15 @@ int isLeapYear(int year)
   return ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0));
 }
 
-eDayOfTheWeek getDayOfWeek(sDate* date)
+eDayOfTheWeek getDayOfWeek(int day, int month, int year)
 {
-  if (date->Month < 3)
+  if (month < 3)
   {
-    date->Month += 12;
-    date->Year--;
+    month += 12;
+    year--;
   }
 
-  int h = (date->Day + 2 * date->Month + 3 * (date->Month + 1) / 5 + date->Year + date->Year / 4 - date->Year / 100 + date->Year / 400) % 7;
+  int h = (day + 2 * month + 3 * (month + 1) / 5 + year + year / 4 - year / 100 + year / 400) % 7;
 
   switch (h) {
     case 0: return Mo;

@@ -42,7 +42,7 @@ int GetDate(char* prompt, sDate* date)
       isDateValid = getDateFromString(input, date);
       RESTORE_POS;
       if (isDateValid)
-        printf("%02i.%02i.%04i\n", date->Day, date->Month, date->Year);
+        printf("%02i.%02i.%04i%*s\n", date->Day, date->Month, date->Year, 50, "");
       else
       {
         printf("Date is invalid! ");
@@ -185,9 +185,9 @@ int GetTime(char* prompt, sTime* time)
       if (isTimeValid)
       {
         if(time->Seconds == -1)
-          printf("%02i:%02i     \n", time->Hours, time->Minutes);
+          printf("%02i:%02i%*s\n", time->Hours, time->Minutes, 50, "");
         else
-          printf("%02i:%02i:%02i  \n", time->Hours, time->Minutes, time->Seconds);
+          printf("%02i:%02i:%02i%*s\n", time->Hours, time->Minutes, time->Seconds, 50, "");
       }
       else
       {

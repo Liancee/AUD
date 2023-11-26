@@ -79,4 +79,12 @@ void printLine(char c, int count);
  ***************************************************************************/
 int GetText(char* prompt, int len, char* text, int isEmptyEntryAllowed);
 
+/***************************************************************************
+ *  PrintNewLine
+ *  Prints new lines as many times as the given parameter
+ *  Parameter: count: how many new lines should be printed
+ *  Result: void
+ ***************************************************************************/
+void PrintNewLine(unsigned short count);
+
 #endif // TOOLS_H

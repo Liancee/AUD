@@ -158,13 +158,14 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
   {
     RESTORE_POS;
     FORECOLOR_YELLOW;
-    printf("%-*s", 160, "Enter text here.");
+    printf("%-*s", maxLen + 1, "Enter text here."); // has to print at least 16 characters to override
     RESTORE_POS;
     FORECOLOR_WHITE;
 
     isInputValid = scanf(format, input);
     clearBuffer();
 
+    RESTORE_POS;
     if (isInputValid)
     {
       len = strlen(input);
@@ -172,13 +173,16 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
       {
         *text = malloc(len + 1);
         if (*text)
+        {
           strcpy(*text, input);
+          printf("%-*s\n", maxLen + 1, input);
+        }
+
       }
       else
       {
         if (!isEmptyInputAllowed) // why am I not getting here when only enter is pressed?
         {
-          RESTORE_POS;
           printf("Invalid input! Empty input is not allowed. ");
           waitForEnter();
           isInputValid = 0;
@@ -188,7 +192,10 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
     else
     {
       if (isEmptyInputAllowed)
+      {
+        printf("%*s\n", maxLen + 1, "");
         isInputValid = 1;
+      }
     }
   } while (!isInputValid);
   free(input);
@@ -205,4 +212,13 @@ void CharReplace(char* input, char toBeReplaced, char replacement)
   for (i = 0; input[i] != '\0'; i++)
     if (input[i] == toBeReplaced)
       input[i] = replacement;
+}
+
+void PrintNewLine(unsigned short count)
+{
+  while(count)
+  {
+    printf("\n");
+    count--;
+  }
 }

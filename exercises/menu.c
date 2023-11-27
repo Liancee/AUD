@@ -2,10 +2,8 @@
 // Created by Liance on 12.10.23.
 //
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "tools.h"
-#include "escapesequenzen.h"
 
 int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
 {

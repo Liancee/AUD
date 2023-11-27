@@ -1,13 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 #include "escapesequenzen.h"
 #include "datetime.h"
 
 int askAgainInternal();
 void waitForEnter();
-int getEmptyAllowedStr(char*, int);
 
 void clearBuffer()
 {

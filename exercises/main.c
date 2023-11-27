@@ -53,8 +53,6 @@ int main()
             case 6:
                 ListCalendar();
                 break;
-            case 7:
-                return 0;
 
             default:
                 /* Could also handle wrong user input here instead of in menu.c cuz default would be exactly

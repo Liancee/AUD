@@ -12,21 +12,14 @@ int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
     if (!menuTitle || !menuItems || countMenuItems <= 0)
         return 0;
 
-    int scanRes = 0;
-    int userChoice = 0;
-    int titleLength = strlen(menuTitle);
-    char *equalSpam = malloc(titleLength * sizeof(char)); // There is printLine function now.. Why did I do this exactly? Practice Ig..
-    if (!equalSpam)
-        return 0;
-    char *tmp = equalSpam;
-
-    for (int i = 0; i < titleLength; i++)
-        *tmp++ = '=';
+    int scanRes = 0, userChoice = 0, titleLength = strlen(menuTitle);
 
     do
     {
         clearScreen();
-        printf("%s\n%s\n\n", menuTitle, equalSpam);
+        printf("%s\n", menuTitle);
+        printLine('=', titleLength);
+        PrintNewLine(2);
 
         for (int i = 0; i < countMenuItems; i++)
         {
@@ -43,10 +36,5 @@ int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
         }
 
     } while (!scanRes);
-
-    free(equalSpam);
-    equalSpam = NULL;
-    tmp = NULL;
-    
     return userChoice;
 }

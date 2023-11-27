@@ -30,14 +30,36 @@ void CreateAppointment()
   printf("  %-12s:\n  %-12s:\n  %-12s:\n  %-12s:\n  %-12s:", "Date", "Time", "Description", "Location", "Duration");
   RESTORE_POS;
 
-  GetDate("Date", &(Calendar[CountAppointments].Date)); // why no *appointment.Date ?
-  GetTime("Time", &(Calendar[CountAppointments].Time)); // &appointment->Time
+  if (!GetDate("Date", &(Calendar[CountAppointments].Date)))
+  {
+    waitForEnter();
+    exit(0);
+  }
 
-  GetText("Description", 100, &(Calendar[CountAppointments].Location), 0);
+  if (!GetTime("Time", &(Calendar[CountAppointments].Time)))
+  {
+    waitForEnter();
+    exit(0);
+  }
 
-  GetText("Location", 15, &(Calendar[CountAppointments].Location), 0);
+  if (!GetText("Description", 100, &(Calendar[CountAppointments].Description), 1))
+  {
+    waitForEnter();
+    exit(0);
+  }
 
-  GetTime("Duration", Calendar[CountAppointments].Duration);
+  if (!GetText("Location", 15, &(Calendar[CountAppointments].Location), 1))
+  {
+    waitForEnter();
+    exit(0);
+  }
+
+  Calendar[CountAppointments].Duration = malloc(1);
+  if (!GetTime("Duration", Calendar[CountAppointments].Duration))
+  {
+    waitForEnter();
+    exit(0);
+  }
 
   printf("\n  Appointment has been saved!\n\n");
   waitForEnter();
@@ -71,7 +93,7 @@ void SortCalendar()
 void ListCalendar()
 {
   printFunctionHeader("Appointment list");
-  printLine('=', 78);
+  printLine('=', 77);
   PrintNewLine(1);
 
   if (!CountAppointments) // No arms no cookies
@@ -81,25 +103,16 @@ void ListCalendar()
     return;
   }
 
-  if (CountAppointments == 1)
-  {
-    // TODO all beneath must be summarized in a function cuz same as below
-    if (Calendar->Date.DayOfTheWeek == NotADay)
-      return;
-    printf("%s, %02i.%02i.%04i", getAppointmentDay(Calendar->Date.DayOfTheWeek), Calendar->Date.Day, Calendar->Date.Month, Calendar->Date.Year);
-    printLine('-', 15);
-    PrintNewLine(1);
-
-    if (strlen(Calendar->Description) < 49)
-      printf("  %02i:%02i -> %-15s| %-48s", Calendar->Time.Hours, Calendar->Time.Minutes, Calendar->Location, Calendar->Description);
-    else
-      printf("  %02i:%02i -> %-15s| %-44s ...", Calendar->Time.Hours, Calendar->Time.Minutes, Calendar->Location, Calendar->Description);
-  }
-
   sAppointment* pCal = Calendar;
   sDate* dates = calloc(CountAppointments, sizeof(sDate));
-  sDate* tmp = dates, *tmp2 = dates; // + sizeof(sDate); <-- did not work, one of the last and nastiest bugs. I wanted to move the sDate pointer tmp2 to the second sDate, now in next line
-  tmp2++; // tmp2 starts at position 2, the first position sth has to be saved to
+  if (!dates)
+  {
+    fprintf(stderr, "Memory allocation of dates failed. Program will exit. ");
+    waitForEnter();
+    exit(0);
+  }
+  sDate* tmp = dates, *nextDateStorePtr = dates; // + sizeof(sDate); <-- did not work, one of the last and nastiest bugs. I wanted to move the sDate pointer tmp2 to the second sDate, now in next line
+  nextDateStorePtr++; // tmp2 starts at position 2, the first position sth has to be saved to
   *tmp = (*pCal).Date;
   unsigned short diffDatesFound = 1, isNewDate;
   pCal++; // start with second date
@@ -119,7 +132,7 @@ void ListCalendar()
     }
     if (isNewDate)
     {
-      *tmp2++ = pCal->Date;
+      *nextDateStorePtr++ = pCal->Date;
       diffDatesFound++;
     }
     pCal++;
@@ -127,9 +140,14 @@ void ListCalendar()
   }
 
   if (!realloc(dates, diffDatesFound * sizeof(sDate)))
-    return;
+  {
+    fprintf(stderr, "Memory reallocation of dates failed. Program will exit. ");
+    waitForEnter();
+    exit(0);
+  }
 
-  int i; // TODO put up
+
+  int i;
   pCal = Calendar;
   for (i = 0; i < diffDatesFound; i++)
   {
@@ -137,17 +155,13 @@ void ListCalendar()
       return;
     printf("%s, %02i.%02i.%04i\n", getAppointmentDay(tmp->DayOfTheWeek), tmp->Day, tmp->Month, tmp->Year);
     printLine('-', 15);
-    printf("\n");
+    PrintNewLine(1);
     while (pCal->Date.Day)
     {
       if (pCal->Date.Year == (*tmp).Year && pCal->Date.Month == (*tmp).Month && pCal->Date.Day == (*tmp).Day)
       {
-        if (!(pCal->Description))
-          printf("  %02i:%02i -> %-15s| %-48s", pCal->Time.Hours, pCal->Time.Minutes, pCal->Location, "No description available ...");
-        else if (strlen(pCal->Description) < 49)
-          printf("  %02i:%02i -> %-15s| %-48s", pCal->Time.Hours, pCal->Time.Minutes, pCal->Location, pCal->Description);
-        else
-          printf("  %02i:%02i -> %-15s| %-44s ...", pCal->Time.Hours, pCal->Time.Minutes, pCal->Location, pCal->Description);
+        printf("  %02i:%02i -> %-15s | ", pCal->Time.Hours, pCal->Time.Minutes, (pCal->Location) ? pCal->Location : "No location set");
+        printf(((pCal->Description ? strlen(pCal->Description) : 0) < 49) ? "%-48s" : "%-.44s ...", (pCal->Description) ? pCal->Description : "No description available ...");
         PrintNewLine(1);
       }
       pCal++;

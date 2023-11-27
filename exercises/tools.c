@@ -7,6 +7,7 @@
 
 int askAgainInternal();
 void waitForEnter();
+int getEmptyAllowedStr(char*, int);
 
 void clearBuffer()
 {
@@ -147,7 +148,10 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
 
   char* input = calloc(maxLen + 1, sizeof(char));
   if (!input)
+  {
+    fprintf(stderr, "Memory allocation of input failed. Program will exit. ");
     return 0;
+  }
 
   sprintf(format, "%%%i[^\n]", maxLen);
 
@@ -158,7 +162,7 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
   {
     RESTORE_POS;
     FORECOLOR_YELLOW;
-    printf("%-*s", maxLen + 1, "Enter text here."); // has to print at least 16 characters to override
+    printf("Enter text here. (max. %i characters; Empty %s allowed)%-*s", maxLen, isEmptyInputAllowed ? "is" : "is not", 50, "");
     RESTORE_POS;
     FORECOLOR_WHITE;
 
@@ -175,26 +179,35 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
         if (*text)
         {
           strcpy(*text, input);
-          printf("%-*s\n", maxLen + 1, input);
+          printf("%-*s\n", 100, input);
         }
-
+        else
+          fprintf(stderr, "Memory allocation of *text failed. Program will exit. ");
       }
       else
       {
-        if (!isEmptyInputAllowed) // why am I not getting here when only enter is pressed?
+        if (!isEmptyInputAllowed)
         {
           printf("Invalid input! Empty input is not allowed. ");
           waitForEnter();
           isInputValid = 0;
         }
+        else
+          isInputValid = 1;
       }
     }
     else
     {
       if (isEmptyInputAllowed)
       {
-        printf("%*s\n", maxLen + 1, "");
+        printf("No %s set ...%*s\n", prompt, 100, "");
         isInputValid = 1;
+      }
+      else
+      {
+        printf("Invalid input! Empty input is not allowed. ");
+        waitForEnter();
+        isInputValid = 0;
       }
     }
   } while (!isInputValid);
@@ -221,4 +234,9 @@ void PrintNewLine(unsigned short count)
     printf("\n");
     count--;
   }
+}
+
+int getEmptyAllowedStr(char* strAddr, int isEmptyInputAllowed)
+{
+
 }

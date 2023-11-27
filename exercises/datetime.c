@@ -17,12 +17,19 @@ int isTimeValid(int, int, int);
 int GetDate(char* prompt, sDate* date)
 {
   if (!date)
+  {
+    fprintf(stderr, "Given parameter sDate* is NULL. Program will exit. ");
     return 0;
+  }
 
   int isInputValid = 0, isDateValid = 0;
   char* input = calloc(1, sizeof("dd.mm.yyyy"));
   if (!input)
+  {
+    fprintf(stderr, "Memory allocation of input failed. Program will exit. ");
     return 0;
+  }
+
 
   PrintPrompt(prompt);
   STORE_POS;
@@ -156,12 +163,22 @@ eDayOfTheWeek getDayOfWeek(int day, int month, int year)
 int GetTime(char* prompt, sTime* time)
 {
   if (!time)
+  {
     time = malloc(sizeof(sTime));//return 0;
+    if (!time)
+    {
+      fprintf(stderr, "Memory allocation of time failed. Program will exit. ");
+      return 0;
+    }
+  }
 
   int isInputValid = 0, isTimeValid = 0;
   char* input = calloc(sizeof("hh:mm:ss"), sizeof(char));
   if (!input)
+  {
+    fprintf(stderr, "Memory allocation of input failed. Program will exit. ");
     return 0;
+  }
 
   PrintPrompt(prompt);
   STORE_POS;
@@ -254,5 +271,5 @@ int getTimeFromString(char* input, sTime* time)
 // Check if the hour, month, and Sec are within valid ranges
 int isTimeValid(int hour, int min, int sec)
 {
-  return (hour >= 0 && (min >= 0 && min < 60) && (sec >= -1 && sec < 60));
+  return ((hour >= 0 && hour < 24) && (min >= 0 && min < 60) && (sec >= -1 && sec < 60));
 }

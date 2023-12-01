@@ -160,7 +160,7 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
   {
     RESTORE_POS;
     FORECOLOR_YELLOW;
-    printf("Enter text here. (max. %i characters; Empty %s allowed)%-*s", maxLen, isEmptyInputAllowed ? "is" : "is not", 50, "");
+    printf("Enter text here. (max. %i characters; Empty %s allowed)%-*s", maxLen, isEmptyInputAllowed ? "is" : "is not", 36, "");
     RESTORE_POS;
     FORECOLOR_WHITE;
 
@@ -198,7 +198,7 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
     {
       if (isEmptyInputAllowed)
       {
-        printf("No %s set ...%*s\n", prompt, 100, "");
+        printf("No %s set ...%*s\n", prompt, 60, "");
         isInputValid = 1;
       }
       else
@@ -232,9 +232,4 @@ void PrintNewLine(unsigned short count)
     printf("\n");
     count--;
   }
-}
-
-int getEmptyAllowedStr(char* strAddr, int isEmptyInputAllowed)
-{
-
 }

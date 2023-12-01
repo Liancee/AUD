@@ -38,7 +38,7 @@ int GetDate(char* prompt, sDate* date)
   {
     RESTORE_POS;
     FORECOLOR_YELLOW;
-    printf("%-*s", 50, "dd.mm.yyyy");
+    printf("%-*s", 50, "dd.mm.yyyy (Empty is not allowed)");
     RESTORE_POS;
     FORECOLOR_WHITE;
     isInputValid = scanf("%11[^\n]", input);
@@ -187,7 +187,7 @@ int GetTime(char* prompt, sTime* time)
   {
     RESTORE_POS;
     FORECOLOR_YELLOW;
-    printf("%-*s", 160, "hh:mm[:ss]");
+    printf("%-*s", 100, "hh:mm[:ss] (Empty is not allowed)");
     RESTORE_POS;
     FORECOLOR_WHITE;
     isInputValid = scanf("%8[^\n]", input);

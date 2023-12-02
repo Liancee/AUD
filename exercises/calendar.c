@@ -150,6 +150,7 @@ void ListCalendar()
   int i;
   pCal = Calendar;
   for (i = 0; i < diffDatesFound; i++)
+  pCal = Calendar; // resetting appointment counter to first appointment (might actually not be necessary since we already do at the end of the loop above (we already do the same with tmp...))
   {
     if (tmp->DayOfTheWeek == NotADay)
       return;

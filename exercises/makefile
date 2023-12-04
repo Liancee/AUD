@@ -1,6 +1,6 @@
 CC = gcc -Wall
 PRG = main
-OBJ = main.o menu.o calendar.o tools.o datetime.o
+OBJ = main.o menu.o calendar.o tools.o datetime.o database.o
 
 $(PRG): $(OBJ)
 	$(CC) -o $@ $^

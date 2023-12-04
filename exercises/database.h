@@ -28,11 +28,10 @@ int saveCalendar();
  *  Depending on the OS a folder and file is created at GetFilePath() and
  *      given rights if needed. Afterwards if the file did not already exist,
  *      a stream is opened and returned.
- *  Parameter:
- *      - windowsOS: 1 => windows, !=1 => other. Needed for file/folder creation.
+ *  Parameter: None
  *  Result: Returns the opened file stream if successful and NULL if unsuccessful.
  ***************************************************************************/
-FILE* createAndOpenXmlFile(unsigned short windowsOS);
+FILE* createAndOpenXmlFile();
 
 /***************************************************************************
  *  openSaveFile

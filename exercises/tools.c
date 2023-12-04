@@ -133,6 +133,7 @@ int askYesOrNo(char *question)
       isInputValid = 0;
     }
   } while (!isInputValid);
+  return 1; // not needed but necessary to compile on my unix machine; structure of this func is **** anyway
 }
 
 void printLine(char c, int count)

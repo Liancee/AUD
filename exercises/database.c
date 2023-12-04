@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <string.h>
 #include "database.h"
 #include "tools.h"
 #include "datetime.h"
@@ -16,11 +17,12 @@
   #define PATH_SEPARATOR "\\"
 #else
   #include <unistd.h>
+  #include <errno.h>
   #define PATH_SEPARATOR "/"
 #endif
 
 const char * dirName = "./Data";
-const char * fileName = "save_file.xml";
+const char * fileName = "calendar.xml";
 
 typedef enum
 {
@@ -44,17 +46,9 @@ int saveCalendar()
 {
   sAppointment * pCal = Calendar;
 
-  FILE * file;
-
-#ifdef _WIN32
-  file = createAndOpenXmlFile(1); // TODO if the windows compiler is too old \\ has to be used instead of / (see line 11-17) (but probably somewhere inside of function)
+  FILE * file = createAndOpenXmlFile(); // TODO if the windows compiler is too old \\ has to be used instead of / (see line 11-17) (but probably somewhere inside of function)
   if (!file)
     return 0;
-#else
-  file = createAndOpenXmlFile(0, dirName, fileName);
-  if (!file)
-    return 0;
-#endif
 
   fprintf(file, "<Calendar>\n");
   // TODO in the line below we get an error if we dont directly write into calendar in createAppointment() in calendar.c cuz we have to access the sDate struct differently
@@ -94,46 +88,50 @@ void saveAppointment(sAppointment app, FILE * file)
   fprintf(file, "\t</Appointment>\n");
 }
 
-FILE * createAndOpenXmlFile(unsigned short windowsOS)
+FILE * createAndOpenXmlFile()
 {
   FILE * file;
   char * fileMode = "wt";
 
-  if (mkdir(dirName) == 0)
-  { // directory created successfully
-    if (!windowsOS)
-      if (chmod(dirName, 0777))
-      {
-        file = openSaveFile(fileMode);
-        if (!file)
-          return NULL;
-      }
-      else
-      {
-        perror("Error setting rights for directory");
-        return NULL; // TODO only exit function or program? exit(EXIT_FAILURE);
-      }
-    else
-    {
-      file = openSaveFile(fileMode);
-      if (!file)
-        return NULL;
-    }
+#ifdef _WIN32
+  if (!mkdir(dirName) || errno == EEXIST)
+  {
+    file = openSaveFile(fileMode);
+    if (!file)
+      return NULL;
   }
+  /*else if (errno == EEXIST)
+  {
+    file = openSaveFile(fileMode);
+    if (!file)
+      return NULL;
+  }*/
   else
   {
-    if (errno == EEXIST)
-    { // directory already exists
+    fprintf(stderr, "Error when creating '%s'. ", dirName);
+    waitForEnter();
+    return NULL;
+  }
+#else
+  if (!mkdir(dirName, 0777))
+    {
+      file = openSaveFile(fileMode);
+      if (!file)
+        return NULL;
+    }
+    else if (errno == EEXIST)
+    {
       file = openSaveFile(fileMode);
       if (!file)
         return NULL;
     }
     else
     {
-      perror("Error creating directory");
-      exit(EXIT_FAILURE);
+      fprintf(stderr, "Error when creating or setting the rights for '%s'. ", dirName);
+      waitForEnter();
+      return NULL;
     }
-  }
+#endif
 
   return file;
 }
@@ -141,19 +139,21 @@ FILE * createAndOpenXmlFile(unsigned short windowsOS)
 FILE * openSaveFile(char * fileMode)
 {
   char * filePath = GetFilePath();
-  if (!filePath)
+  if (!filePath || access(filePath, F_OK))
     return NULL;
 
   FILE * file;
   file = fopen(filePath, fileMode);
-  free(filePath);
-  filePath = NULL;
   if (!file)
   {
-    fprintf(stderr, "Error could not open save file at: 'filePath'. ");
+    fprintf(stderr, "Error could not open save file at: '%s'. ", filePath);
+    free(filePath);
+    filePath = NULL;
     waitForEnter();
     return NULL;
   }
+  free(filePath);
+  filePath = NULL;
   return file;
 }
 

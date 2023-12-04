@@ -179,7 +179,7 @@ void getDiffDates(sAppointment * pCal, sDate * dates, unsigned short * diffDates
   unsigned short isNewDate; // isNewDate is set 1 if a date is not found in dates else if it is 0. If it is 1 at the end of the iteration it is added to dates and 1 is added to diffDatesFound
   // creating a pointer pDates to iterate through dates; creating a pointer pNextDateStorePtr to know where the next date is to be stored
   sDate * pDates = dates, * pNextDateStorePtr = dates;
-  *pDates++ = (*pCal).Date; // storing the first date into dates first position and going to second position afterward for parameter usage in getDiffDates func
+  *pDates = (*pCal).Date; // storing the first date into dates first position
   pNextDateStorePtr++;
   pCal++; // start with second date
 

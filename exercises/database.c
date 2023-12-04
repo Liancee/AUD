@@ -139,7 +139,7 @@ FILE * createAndOpenXmlFile()
 FILE * openSaveFile(char * fileMode)
 {
   char * filePath = GetFilePath();
-  if (!filePath || access(filePath, F_OK))
+  if (!filePath || (strchr(fileMode, 'r') && access(filePath, F_OK)))
     return NULL;
 
   FILE * file;

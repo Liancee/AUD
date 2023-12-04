@@ -64,7 +64,11 @@ int main()
           that => (if (userChoice > countMenuItems || userChoice <= 0)) but the task literally says it
           has to be handled in the GetMenu() method in menu.c*/
           if (askYesOrNo("Save appointments before exiting(y/n)? "))
-            saveCalendar();
+            if (!saveCalendar())
+            {
+              FreeCalendar();
+              exit(EXIT_FAILURE);
+            }
 
           FreeCalendar();
 

@@ -48,7 +48,7 @@ int GetDate(char* prompt, sDate* date);
  *      - date: pointer to the struct object to save it in if valid.
  *  Result: Returns 1=true when the string contained a date otherwise 0=false.
  ***************************************************************************/
-int getDateFromString(char *input, sDate *date);
+int GetDateFromString(char *input, sDate *date);
 
 /***************************************************************************
  *  GetTime
@@ -69,7 +69,7 @@ int GetTime(char* prompt, sTime* time);
  *      - time: pointer to the struct object to save it in if valid.
  *  Result: Returns 1=true when the string contained a time otherwise 0=false.
  ***************************************************************************/
-int getTimeFromString(char* input, sTime* time);
+int GetTimeFromString(char* input, sTime* time);
 
 /***************************************************************************
  *  getDayOfWeek

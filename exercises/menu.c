@@ -32,7 +32,6 @@ int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
             scanRes = 0;
             waitForEnter();
         }
-
     } while (!scanRes);
     return userChoice;
 }

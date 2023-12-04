@@ -1,18 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "datetime.h"
 #include "datastructure.h"
 #include "escapesequenzen.h"
 #include "tools.h"
 
 // function declarations
-void PrintPrompt(char*);
-int getDateFromString(char*, sDate*);
-int isDateValid(int, int, int);
-int isLeapYear(int);
-eDayOfTheWeek getDayOfWeek(int day, int month, int year);
-int getTimeFromString(char*, sTime*);
 int isTimeValid(int, int, int);
-
 
 int GetDate(char* prompt, sDate* date)
 {
@@ -25,11 +19,7 @@ int GetDate(char* prompt, sDate* date)
   int isInputValid = 0, isDateValid = 0;
   char* input = calloc(1, sizeof("dd.mm.yyyy"));
   if (!input)
-  {
-    fprintf(stderr, "Memory allocation of input failed. Program will exit. ");
-    return 0;
-  }
-
+    return RaiseMallocException("input");
 
   PrintPrompt(prompt);
   STORE_POS;
@@ -46,7 +36,7 @@ int GetDate(char* prompt, sDate* date)
 
     if (isInputValid)
     {
-      isDateValid = getDateFromString(input, date);
+      isDateValid = GetDateFromString(input, date);
       RESTORE_POS;
       if (isDateValid)
         printf("%02i.%02i.%04i%*s\n", date->Day, date->Month, date->Year, 50, "");
@@ -65,7 +55,7 @@ void PrintPrompt(char* prompt)
   printf("  %-12s: ", prompt);
 }
 
-int getDateFromString(char* input, sDate* date)
+int GetDateFromString(char* input, sDate* date)
 {
   char* pDay = input;
   char* pMonth = 0;
@@ -166,19 +156,13 @@ int GetTime(char* prompt, sTime* time)
   {
     time = malloc(sizeof(sTime));//return 0;
     if (!time)
-    {
-      fprintf(stderr, "Memory allocation of time failed. Program will exit. ");
-      return 0;
-    }
+      return RaiseMallocException("time");
   }
 
   int isInputValid = 0, isTimeValid = 0;
   char* input = calloc(sizeof("hh:mm:ss"), sizeof(char));
   if (!input)
-  {
-    fprintf(stderr, "Memory allocation of input failed. Program will exit. ");
-    return 0;
-  }
+    return RaiseMallocException("input");
 
   PrintPrompt(prompt);
   STORE_POS;
@@ -197,7 +181,7 @@ int GetTime(char* prompt, sTime* time)
     {
       // TODO: empty input should also be allowed => NULL Pointer
 
-      isTimeValid = getTimeFromString(input, time);
+      isTimeValid = GetTimeFromString(input, time);
       RESTORE_POS;
       if (isTimeValid)
       {
@@ -217,7 +201,7 @@ int GetTime(char* prompt, sTime* time)
   return 1;
 }
 
-int getTimeFromString(char* input, sTime* time)
+int GetTimeFromString(char* input, sTime* time)
 {
   char* pHour = input;
   char* pMin = NULL;

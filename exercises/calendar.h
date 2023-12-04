@@ -58,4 +58,12 @@ void SortCalendar();
  ***************************************************************************/
 void ListCalendar();
 
+/***************************************************************************
+ *  FreeCalendar
+ *  Frees the dynamically allocated memory for each appointment in the Calendar.
+ *  Parameter: None
+ *  Result: void
+ ***************************************************************************/
+void FreeCalendar();
+
 #endif // CALENDAR_H

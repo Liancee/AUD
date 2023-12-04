@@ -43,7 +43,7 @@ void clearScreen();
 
 /***************************************************************************
  *  waitForEnter
- *  Awaits an enter keyboard input
+ *  Awaits an enter keyboard input.
  *  Parameter: None
  *  Result: void
  ***************************************************************************/
@@ -51,7 +51,7 @@ void waitForEnter();
 
 /***************************************************************************
  *  clearBuffer
- *  Clears buffer til line break
+ *  Clears buffer til line break.
  *  Parameter: None
  *  Result: void
  ***************************************************************************/
@@ -59,7 +59,7 @@ void clearBuffer();
 
 /***************************************************************************
  *  resetArray
- *  Sets every value in an array to 0
+ *  Sets every value in an array to 0.
  *  Parameter:
  *      - a: Pointer to array which is to be nulled/reseted.
  *      - count: length of array.
@@ -69,10 +69,10 @@ void resetArray(int *a, int count);
 
 /***************************************************************************
  *  printLine
- *  Method that repeatedly prints a given character a number of given times
+ *  Method that repeatedly prints a given character a number of given times.
  *  Parameter:
- *      - c: character to be printed given times
- *      - count: the given character will be printed [count] times
+ *      - c: character to be printed given times.
+ *      - count: the given character will be printed [count] times.
  *  Result: void
  ***************************************************************************/
 void printLine(char c, int count);
@@ -86,17 +86,36 @@ void printLine(char c, int count);
  *      - text: is the address where the final user input is saved to.
  *      - isEmptyInputAllowed: determines if the user is allowed to input
  *      nothing.
- *  Result: Returns 1 when everything went smoothly otherwise 0.
+ *  Result: Returns 1 if everything went smoothly otherwise 0.
  ***************************************************************************/
 int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed);
 
 /***************************************************************************
  *  PrintNewLine
- *  Prints new lines as many times as the given parameter
+ *  Prints new lines as many times as the given parameter.
  *  Parameter:
  *      - count: how many new lines should be printed.
  *  Result: void
  ***************************************************************************/
 void PrintNewLine(unsigned short count);
+
+/***************************************************************************
+ *  RaiseMallocException
+ *  Prints an error line that the memory allocation failed of a certain
+ *      variable given as string.
+ *  Parameter:
+ *      - varName: variable name of which memory could not get allocated.
+ *  Result: Returns 0 by default
+ ***************************************************************************/
+int RaiseMallocException(char * varName);
+
+/***************************************************************************
+ *  fclearBuffer
+ *  Clears buffer of a given file til line break or eof.
+ *  Parameter:
+ *      - file: file stream of which the buffer shall be cleared.
+ *  Result: void
+ ***************************************************************************/
+void fclearBuffer(FILE * file);
 
 #endif // TOOLS_H

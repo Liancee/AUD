@@ -7,4 +7,6 @@ add_executable(exercises main.c
         menu.c
         tools.c
         datetime.c
-        calendar.c)
+        calendar.c
+        database.c
+        database.h)

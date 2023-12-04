@@ -1,16 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "tools.h"
 #include "escapesequenzen.h"
 #include "datetime.h"
 
 int askAgainInternal();
-void waitForEnter();
 
 void clearBuffer()
 {
   int c;
   while ((c = getchar()) != '\n' && c != EOF);
+}
+
+void fclearBuffer(FILE * file)
+{
+  int c;
+  while ((c = fgetc(file)) != '\n' && c != EOF);
 }
 
 int askAgain()
@@ -146,10 +152,7 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
 
   char* input = calloc(maxLen + 1, sizeof(char));
   if (!input)
-  {
-    fprintf(stderr, "Memory allocation of input failed. Program will exit. ");
-    return 0;
-  }
+    return RaiseMallocException("input");
 
   sprintf(format, "%%%i[^\n]", maxLen);
 
@@ -180,7 +183,7 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
           printf("%-*s\n", 100, input);
         }
         else
-          fprintf(stderr, "Memory allocation of *text failed. Program will exit. ");
+          return RaiseMallocException("*text");
       }
       else
       {
@@ -232,4 +235,11 @@ void PrintNewLine(unsigned short count)
     printf("\n");
     count--;
   }
+}
+
+int RaiseMallocException(char * varName)
+{
+  fprintf(stderr, "Memory allocation of %s failed. Program will exit. ", varName);
+  waitForEnter();
+  return 0;
 }

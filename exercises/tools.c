@@ -214,6 +214,7 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
     }
   } while (!isInputValid);
   free(input);
+  input = NULL;
   return isInputValid;
 }
 

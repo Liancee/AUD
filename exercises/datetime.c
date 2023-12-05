@@ -47,6 +47,8 @@ int GetDate(char* prompt, sDate* date)
       }
     }
   } while (!isInputValid || !isDateValid);
+  free(input);
+  input = NULL;
   return 1;
 }
 
@@ -198,6 +200,7 @@ int GetTime(char* prompt, sTime* time)
     }
   } while (!isInputValid || !isTimeValid);
   free(input);
+  input = NULL;
   return 1;
 }
 

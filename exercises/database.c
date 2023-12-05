@@ -61,8 +61,11 @@ int saveCalendar()
 
   fclose(file);
 
+  FORECOLOR_GREEN;
   // snprintf(this: dirName, fileName -> into this: %s/%s) => filePath; realpath(filePath, actualPath) => output actualPath; but for some reason realpath() func cannot be found in stdlib.h?!
-  printf("Saved in: \'%s/%s\'\n\nProgram will now exit. ", dirName, fileName);
+  printf("Saved in: \'%s/%s\'\n\n", dirName, fileName);
+  FORECOLOR_WHITE;
+  printf("Program will now exit. ");
   waitForEnter();
 
   return 1;
@@ -201,6 +204,22 @@ int loadCalendar()
 
           pCal++;
           CountAppointments++;
+
+          if (CountAppointments == MAXAPPOINTMENTS)
+          {
+            fprintf(stderr, "Error while loading appointments from %s.\nThere are more saved appointments than the allowed max. count (%i) of the standard version.\nPlease upgrade to Appointment manager V 0.2 Pro to have more appointment slots! [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅]\n\n", GetFilePath(), MAXAPPOINTMENTS);
+            FORECOLOR_RED;
+            printf("Only the first %i appointments were loaded. ", MAXAPPOINTMENTS);
+            FORECOLOR_WHITE;
+            waitForEnter();
+
+            free(row);
+            row = NULL;
+            pRow = NULL;
+            fclose(file);
+
+            return 1;
+          }
         }
       }
 

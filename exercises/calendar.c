@@ -24,8 +24,8 @@ void CreateAppointment()
 
   if (CountAppointments == MAXAPPOINTMENTS)
   {
-    printf("You have reached the max amount of available appointments. Please upgrade to Appointment manager V 0.2 Pro to have more appointment slots! [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] ");
-    waitForEnter();
+    printf("You have reached the max amount of available appointments. Please upgrade to Appointment manager V 0.2 Pro to have more appointment slots! [$(5)$] ");
+    waitForEnter("continue");
     clearScreen();
     return;
   }
@@ -53,32 +53,32 @@ void CreateAppointment()
     exit(EXIT_FAILURE);
 
   printf("\n  Appointment has been saved!\n\n");
-  waitForEnter();
+  waitForEnter("continue");
   CountAppointments++;
 };
 
 void EditAppointment()
 {
   printf("Edit appointment\n\n");
-  waitForEnter();
+  waitForEnter("continue");
 };
 
 void DeleteAppointment()
 {
   printf("Delete appointment\n\n");
-  waitForEnter();
+  waitForEnter("continue");
 };
 
 void SearchAppointment()
 {
   printf("Search appointment\n\n");
-  waitForEnter();
+  waitForEnter("continue");
 };
 
 void SortCalendar()
 {
   printf("Sort appointments\n\n");
-  waitForEnter();
+  waitForEnter("continue");
 };
 
 void ListCalendar()
@@ -90,7 +90,7 @@ void ListCalendar()
   if (!CountAppointments) // No arms no cookies
   {
     printf("\nNo upcoming appointments in calendar! ");
-    waitForEnter();
+    waitForEnter("continue");
     return;
   }
 
@@ -107,7 +107,7 @@ void ListCalendar()
   if (!tmpDates)
   {
     fprintf(stderr, "Memory reallocation of dates failed. Program will exit. ");
-    waitForEnter();
+    waitForEnter("continue");
     exit(EXIT_FAILURE);
   }
   dates = tmpDates;
@@ -148,7 +148,7 @@ void ListCalendar()
   pDates = NULL;
 
   PrintNewLine(1);
-  waitForEnter();
+  waitForEnter("continue");
 };
 
 void printFunctionHeader(char* title)
@@ -229,5 +229,4 @@ void freeAppointment(sAppointment * app)
     free(app->Location);
   if (app->Duration)
     free(app->Duration);
-  // TODO is this enough?
 }

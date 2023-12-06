@@ -44,6 +44,8 @@ void appointmentCleanup(sAppointment *);
 
 int saveCalendar()
 {
+  // if (!CountAppointments) // we could ask if there are any appointments but then the file would not be created, so we create an empty file
+
   sAppointment * pCal = Calendar;
 
   FILE * file = createAndOpenXmlFile(); // TODO if the windows compiler is too old \\ has to be used instead of / (see line 11-17) (but probably somewhere inside of function)
@@ -51,10 +53,15 @@ int saveCalendar()
     return 0;
 
   fprintf(file, "<Calendar>\n");
+  int i = 0;
   // TODO in the line below we get an error if we dont directly write into calendar in createAppointment() in calendar.c cuz we have to access the sDate struct differently
   while (pCal->Date.Day) // since day is a mandatory field and is validated (>1) we use this to go through every created appointment
   {
+    i++;
     saveAppointment(*pCal, file);
+    if (i == MAXAPPOINTMENTS)
+      break;
+
     pCal++;
   }
   fprintf(file, "</Calendar>\n");
@@ -63,10 +70,10 @@ int saveCalendar()
 
   FORECOLOR_GREEN;
   // snprintf(this: dirName, fileName -> into this: %s/%s) => filePath; realpath(filePath, actualPath) => output actualPath; but for some reason realpath() func cannot be found in stdlib.h?!
-  printf("Saved in: \'%s/%s\'\n\n", dirName, fileName);
+  printf("\nSaved in: \'%s/%s\'\n\n", dirName, fileName);
   FORECOLOR_WHITE;
   printf("Program will now exit. ");
-  waitForEnter();
+  waitForEnter("continue");
 
   return 1;
 }
@@ -112,7 +119,7 @@ FILE * createAndOpenXmlFile()
   else
   {
     fprintf(stderr, "Error when creating '%s'. ", dirName);
-    waitForEnter();
+    waitForEnter("continue");
     return NULL;
   }
 #else
@@ -131,7 +138,7 @@ FILE * createAndOpenXmlFile()
     else
     {
       fprintf(stderr, "Error when creating or setting the rights for '%s'. ", dirName);
-      waitForEnter();
+      waitForEnter("continue");
       return NULL;
     }
 #endif
@@ -152,7 +159,7 @@ FILE * openSaveFile(char * fileMode)
     fprintf(stderr, "Error could not open save file at: '%s'. ", filePath);
     free(filePath);
     filePath = NULL;
-    waitForEnter();
+    waitForEnter("continue");
     return NULL;
   }
   free(filePath);
@@ -207,11 +214,8 @@ int loadCalendar()
 
           if (CountAppointments == MAXAPPOINTMENTS)
           {
-            fprintf(stderr, "Error while loading appointments from %s.\nThere are more saved appointments than the allowed max. count (%i) of the standard version.\nPlease upgrade to Appointment manager V 0.2 Pro to have more appointment slots! [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅]\n\n", GetFilePath(), MAXAPPOINTMENTS);
-            FORECOLOR_RED;
-            printf("Only the first %i appointments were loaded. ", MAXAPPOINTMENTS);
-            FORECOLOR_WHITE;
-            waitForEnter();
+            fprintf(stderr, "Loading appointments from %s stopped at the allowed max. count (%i) of the standard version.\nPlease upgrade to Appointment manager V 0.2 Pro to have more appointment slots! [$(5)$]\n\n", GetFilePath(), MAXAPPOINTMENTS);
+            waitForEnter("continue");
 
             free(row);
             row = NULL;
@@ -223,7 +227,7 @@ int loadCalendar()
         }
       }
 
-      if (feof(file))
+      else if (feof(file))
         return raiseXmlLoadException("</Calendar>"); // TODO if CRLF is missing at eof we get here too..
 
     } while (strncmp(pRow, "</Calendar>", calendarEndOffset));
@@ -276,12 +280,24 @@ int loadAppointment(FILE * file, sAppointment * app) // TODO is it better to giv
       pRow++;
     if (!strncmp(pRow, "<Date>", dateOffset))
     {
-      if (!GetDateFromString(getValue(pRow, dateOffset), &(app->Date)))
-        return raiseXmlLoadException("Date");
+      char * date = getValue(pRow, dateOffset);
+      if (date)
+      {
+        if (!GetDateFromString(date, &(app->Date)))
+          return raiseXmlLoadException("Date");
+      }
+      else
+          return raiseXmlLoadException("Date");
     }
     else if (!strncmp(pRow, "<Time>", timeOffset))
     {
-      if (!GetTimeFromString(getValue(pRow, timeOffset), &(app->Time)))
+      char * time = getValue(pRow, dateOffset);
+      if (time)
+      {
+        if (!GetTimeFromString(time, &(app->Time)))
+          return raiseXmlLoadException("Time");
+      }
+      else
         return raiseXmlLoadException("Time");
     }
     else if (!strncmp(pRow, "<Description>", descriptionOffset))
@@ -323,14 +339,22 @@ int loadAppointment(FILE * file, sAppointment * app) // TODO is it better to giv
       if (app->Duration)
         free(app->Duration); // TODO If a tag occurs wrongly twice we free the first entry and take the second; maybe ask user if he wants the first or second? cant show values here tho
 
-      app->Duration = malloc(sizeof(sTime));
-      if (!app->Duration)
-        return RaiseMallocException("app->Duration");
-      if (!GetTimeFromString(getValue(pRow, durationOffset), app->Duration)) // TODO has also to be changed perhaps later on if it should be nullable
-        return raiseXmlLoadException("Duration");
+      char * dur = getValue(pRow, durationOffset);
+      if (dur)
+      {
+        app->Duration = malloc(sizeof(sTime));
+        if (app->Duration)
+        {
+          if (!GetTimeFromString(dur, app->Duration)) // TODO has also to be changed perhaps later on if it should be nullable
+            return raiseXmlLoadException("Duration");
+        }
+        else
+          return RaiseMallocException("app->Duration");
+      }
+      else
+        app->Duration = NULL;
     }
-
-    if (feof(file))
+    else if (feof(file))
       return raiseXmlLoadException("</Appointment>");
 
   } while (strncmp(pRow, "</Appointment>", appointmentEndOffset));
@@ -368,6 +392,6 @@ int raiseXmlLoadException(char* tag)
   fprintf(stderr, "Critical error while trying to load appointments from %s.\n%s is a mandatory field and was either not found or illegally empty!\nProgram will now exit. ", filePath, tag); // TODO.11 ask can I somehow directly use GetFilePath() and free it afterwards?
   free(filePath);
   filePath = NULL;
-  waitForEnter();
+  waitForEnter("continue");
   return 0;
 }

@@ -30,7 +30,7 @@ int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
         {
             printf("\nNo option with that number! ");
             scanRes = 0;
-            waitForEnter();
+            waitForEnter("continue");
         }
     } while (!scanRes);
     return userChoice;

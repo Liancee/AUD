@@ -43,11 +43,12 @@ void clearScreen();
 
 /***************************************************************************
  *  waitForEnter
- *  Awaits an enter keyboard input.
- *  Parameter: None
+ *  Loops until enter (\n, RN) was pressed and outputs "Press enter to [doWhat] ...".
+ *  Parameter:
+ *      - doWhat: Output that is supposed to be shown to the user.
  *  Result: void
  ***************************************************************************/
-void waitForEnter();
+void waitForEnter(char * doWhat);
 
 /***************************************************************************
  *  clearBuffer

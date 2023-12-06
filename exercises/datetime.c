@@ -43,7 +43,7 @@ int GetDate(char* prompt, sDate* date)
       else
       {
         printf("Date is invalid! ");
-        waitForEnter();
+        waitForEnter("continue");
       }
     }
   } while (!isInputValid || !isDateValid);
@@ -195,7 +195,7 @@ int GetTime(char* prompt, sTime* time)
       else
       {
         printf("Time is invalid! Note that seconds are [optional] (hh:mm or hh:mm:ss). ");
-        waitForEnter();
+        waitForEnter("continue");
       }
     }
   } while (!isInputValid || !isTimeValid);

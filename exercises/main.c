@@ -34,7 +34,7 @@ int main()
     {
       case 0:
           printf("Parameter error for GetMenu() method! Program will exit.");
-          waitForEnter();
+          waitForEnter("continue");
           return 0;
       case 1:
           CreateAppointment();

@@ -28,7 +28,7 @@ int askAgain()
     if (!isInputValid)
     {
       printf("Invalid input! Please enter 'y/Y' or 'n/N' when prompted! ");
-      waitForEnter();
+      waitForEnter("continue");
     }
     isInputValid = askAgainInternal();
   } while (!isInputValid);
@@ -45,7 +45,7 @@ int askAgainPos(int row, int col)
     if (!isInputValid)
     {
       printf("Invalid input! Please enter 'y/Y' or 'n/N' when prompted! ");
-      waitForEnter();
+      waitForEnter("continue");
       POSITION(row, col);
       printf("%-*s", 100, "");
       POSITION(row, col);
@@ -81,11 +81,11 @@ void resetArray(int *a, int count)
     *a++ = 0;
 }
 
-void waitForEnter()
+void waitForEnter(char * doWhat)
 {
   char c = 0;
 
-  printf("Press Enter to continue ...");
+  printf("Press Enter to %s ...", doWhat);
 
   do
     scanf("%1c", &c);
@@ -129,7 +129,7 @@ int askYesOrNo(char *question)
     else
     {
       printf("Invalid input! Please enter 'y/Y' or 'n/N' when prompted! ");
-      waitForEnter();
+      waitForEnter("continue");
       isInputValid = 0;
     }
   } while (!isInputValid);
@@ -191,7 +191,7 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
         if (!isEmptyInputAllowed)
         {
           printf("Invalid input! Empty input is not allowed. ");
-          waitForEnter();
+          waitForEnter("continue");
           isInputValid = 0;
         }
         else
@@ -208,7 +208,7 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
       else
       {
         printf("Invalid input! Empty input is not allowed. ");
-        waitForEnter();
+        waitForEnter("continue");
         isInputValid = 0;
       }
     }
@@ -242,6 +242,6 @@ void PrintNewLine(unsigned short count)
 int RaiseMallocException(char * varName)
 {
   fprintf(stderr, "Memory allocation of %s failed. Program will exit. ", varName);
-  waitForEnter();
+  waitForEnter("continue");
   return 0;
 }

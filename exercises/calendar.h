@@ -5,6 +5,8 @@
 #ifndef CALENDAR_H
 #define CALENDAR_H
 
+extern const int appointmentsPerPage;
+
 /***************************************************************************
  *  This module contains methods to manipulate an appointment in many different ways.
   Detailed information about each method and its arguments will be provided seperately.

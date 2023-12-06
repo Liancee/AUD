@@ -13,6 +13,8 @@
 int CountAppointments = 0;
 sAppointment Calendar[MAXAPPOINTMENTS];
 
+int const appointmentsPerPage = 5;
+
 void printFunctionHeader(char*);
 char* getAppointmentDay(eDayOfTheWeek);
 void getDiffDates(sAppointment *, sDate *, unsigned short *);
@@ -113,7 +115,7 @@ void ListCalendar()
   dates = tmpDates;
   pDates = dates;
 
-  int i; // not moving this up cuz this will probably be extracted into a function later on
+  int i, outputCount = 0, remainingDatesToBeDisplayed = CountAppointments; // not moving this up cuz this will probably be extracted into a function later on
   pCal = Calendar; // resetting appointment counter to first appointment
   for (i = 0; i < diffDatesFound; i++) // for every different date we found ...
   {
@@ -122,6 +124,7 @@ void ListCalendar()
     printf("%s, %02i.%02i.%04i\n", getAppointmentDay(pDates->DayOfTheWeek), pDates->Day, pDates->Month, pDates->Year); // prints header for every different date
     printLine('-', 15);
     PrintNewLine(1);
+
     while (pCal->Date.Day) // same as in loop above => if appointment "exists/is set"
     {
       if (pCal->Date.Year == (*pDates).Year && pCal->Date.Month == (*pDates).Month && pCal->Date.Day == (*pDates).Day) // if the current appointment date matches the current date to be output
@@ -129,8 +132,29 @@ void ListCalendar()
         printf("  %02i:%02i -> %-15s | ", pCal->Time.Hours, pCal->Time.Minutes, (pCal->Location) ? pCal->Location : "No location set");
         printf(((pCal->Description ? strlen(pCal->Description) : 0) < 49) ? "%-48s" : "%-.44s ...", (pCal->Description) ? pCal->Description : "No description available ...");
         PrintNewLine(1);
+        outputCount++;
       }
       pCal++; // goto next appointment
+
+      if (outputCount == appointmentsPerPage && remainingDatesToBeDisplayed > 0)
+      {
+        outputCount = 0;
+        remainingDatesToBeDisplayed -= appointmentsPerPage;
+        printf("\n");
+        int outputLen = strlen("show the next (%i) appointments");
+        char * output = malloc(outputLen);
+        if (output)
+        {
+          snprintf(output, outputLen, "show the next (%i) appointments", remainingDatesToBeDisplayed > appointmentsPerPage ? appointmentsPerPage : remainingDatesToBeDisplayed);
+          waitForEnter(output);
+          free(output);
+          output = NULL;
+        }
+        else
+          waitForEnter("show the next appointments");
+
+        clearScreen();
+      }
     }
     if (i != diffDatesFound - 1) // if we printed all the different dates we print the "end" listing part
     {

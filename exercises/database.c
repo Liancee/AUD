@@ -9,7 +9,6 @@
 #include "database.h"
 #include "tools.h"
 #include "datetime.h"
-#include "calendar.h"
 #include "escapesequenzen.h"
 
 #ifdef _WIN32
@@ -226,9 +225,12 @@ int loadCalendar()
           }
         }
       }
-
+      else if (!strncmp(pRow, "</Calendar>", calendarEndOffset))
+        break;
       else if (feof(file))
         return raiseXmlLoadException("</Calendar>"); // TODO if CRLF is missing at eof we get here too..
+      /*else
+        raiseXmlLoadException("file corrupt");*/
 
     } while (strncmp(pRow, "</Calendar>", calendarEndOffset));
 

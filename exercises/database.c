@@ -213,8 +213,10 @@ int loadCalendar()
 
           if (CountAppointments == MAXAPPOINTMENTS)
           {
-            fprintf(stderr, "Loading appointments from %s stopped at the allowed max. count (%i) of the standard version.\nPlease upgrade to Appointment manager V 0.2 Pro to have more appointment slots! [$(5)$]\n\n", GetFilePath(), MAXAPPOINTMENTS);
+            char * filePath = GetFilePath();
+            fprintf(stderr, "Loading appointments from %s stopped at the allowed max. count (%i) of the standard version.\nPlease upgrade to Appointment manager V 0.2 Pro to have more appointment slots! [$(5)$]\n\n", filePath, MAXAPPOINTMENTS);
             waitForEnter("continue");
+            free(filePath);
 
             free(row);
             row = NULL;

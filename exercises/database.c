@@ -197,9 +197,9 @@ int loadCalendar()
           appointment_sanitization(pCal, line);
 
           pCal++;
-          CountAppointments++;
+          AppointmentCount++;
 
-          if (CountAppointments == MAXAPPOINTMENTS)
+          if (AppointmentCount == MAXAPPOINTMENTS)
           {
             char *filePath = GetFilePath();
             fprintf(stderr, "Loading appointments from %s stopped at the allowed max. count (%i) of the standard version.\nPlease upgrade to Appointment manager V 0.2 Pro to have more appointment slots! [$(5)$]\n\n", filePath, MAXAPPOINTMENTS);
@@ -391,8 +391,7 @@ char * getValue(char * row, eTagOffsets tagOffset)
     *(start + len) = '\0';
     return start;
   }
-  else
-    return NULL;
+  else return NULL;
 }
 
 int raiseXmlLoadException(char * tag, unsigned short line)
@@ -409,7 +408,7 @@ int raiseAlreadyLoadedException(char * tag, unsigned short line)
 {
   char * filePath = GetFilePath();
   fprintf(stderr, "There was already a %s loaded for this appointment,\nperhaps there are two <%s> tags in line %d in one of your saved appointments?\n", tag, tag, line);
-  if(!askYesOrNo("Press y/Y to continue loading (the second entry is loaded) or n/N to exit the program. "))
+  if(!askYesOrNo("Press [y/Y] to continue loading (the second entry is loaded) or [n/N] to exit the program. "))
   {
     printf("\nSave file location: %s\n", filePath);
     waitForEnter("continue");

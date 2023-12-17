@@ -2,7 +2,7 @@
 #include <string.h>
 #include "tools.h"
 
-int GetMenu(char *menuTitle, char *menuItems[], int countMenuItems)
+int GetMenu(char * menuTitle, char * menuItems[], int countMenuItems)
 {
     if (!menuTitle || !menuItems || countMenuItems <= 0) return 0;
 

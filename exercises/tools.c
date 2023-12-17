@@ -123,7 +123,7 @@ int askYesOrNo(char *question)
     else if (c == 'y' || c == 'Y') return 1;
     else
     {
-      printf("Invalid input! Please enter 'y/Y' or 'n/N' when prompted! ");
+      printf("Invalid input! Please enter [y/Y] or [n/N] when prompted! ");
       waitForEnter("continue");
       isInputValid = 0;
     }

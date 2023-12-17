@@ -6,22 +6,25 @@
 #include "datastructure.h"
 #include "datetime.h"
 #include "escapesequenzen.h"
+#include "menu.h"
+#include "sort.h"
 
-int CountAppointments = 0;
+int AppointmentCount = 0;
 sAppointment Calendar[MAXAPPOINTMENTS];
 
 int const appointmentsPerPage = 5;
 
-void printFunctionHeader(char*);
+void printFunctionHeader(char *);
 char* getAppointmentDay(eDayOfTheWeek);
 void getDiffDates(sAppointment *, sDate *, unsigned short *);
+char * add_time(sAppointment *);
 void freeAppointment(sAppointment *);
 
 void CreateAppointment()
 {
   printFunctionHeader("Appointment creator");
 
-  if (CountAppointments == MAXAPPOINTMENTS)
+  if (AppointmentCount == MAXAPPOINTMENTS)
   {
     printf("You have reached the max amount of available appointments. Please upgrade to Appointment manager V 0.2 Pro to have more appointment slots! [$(5)$] ");
     waitForEnter("continue");
@@ -30,7 +33,7 @@ void CreateAppointment()
     return;
   }
 
-  sAppointment * pCal = &(Calendar[CountAppointments]);
+  sAppointment * pCal = &(Calendar[AppointmentCount]);
 
   STORE_POS;
   printf("  %-12s:\n  %-12s:\n  %-12s:\n  %-12s:\n  %-12s:", "Date", "Time", "Description", "Location", "Duration");
@@ -59,7 +62,7 @@ void CreateAppointment()
 
   printf("\n  Appointment has been saved!\n\n");
   waitForEnter("continue");
-  CountAppointments++;
+  AppointmentCount++;
 };
 
 void EditAppointment()
@@ -82,15 +85,54 @@ void SearchAppointment()
 
 void SortCalendar()
 {
-  printf("Sort appointments\n\n");
-  waitForEnter("continue");
+  if (!AppointmentCount) // No arms no cookies
+  {
+    printFunctionHeader("Sort appointments");
+    printLine('=', 77);
+    PrintNewLine(1);
+
+    printf("\nThere are no appointments to sort in the calendar! ");
+    waitForEnter("continue");
+    return;
+  }
+
+  int userChoice = 0;
+  char * menuItems[] =
+  {
+      "Sort by date and time",
+      "Sort by description",
+      "Sort by location",
+      "Sort by duration",
+      "Back to main menu"
+  };
+
+  switch (GetMenu("Sort appointments", menuItems, sizeof(menuItems) / sizeof(menuItems[0])))
+  {
+    case 0:
+      printf("Parameter error for GetMenu() method! Program will exit.");
+    waitForEnter("continue");
+    exit(EXIT_FAILURE);
+    case 1:
+      Quick_sort(Calendar, AppointmentCount, Sort_date_time);
+      return;
+    case 2:
+      Quick_sort(Calendar, AppointmentCount, Sort_description);
+      return;
+    case 3:
+      Quick_sort(Calendar, AppointmentCount, Sort_location);
+      return;
+    case 4:
+      Quick_sort(Calendar, AppointmentCount, Sort_duration);
+      return;
+    default: return; // handles case 5 "Back to main menu"
+  }
 };
 
 void ListCalendar()
 {
   //clearScreen(); TODO
 
-  if (!CountAppointments) // No arms no cookies
+  if (!AppointmentCount) // No arms no cookies
   {
     printFunctionHeader("Appointment list");
     printLine('=', 77);
@@ -102,7 +144,7 @@ void ListCalendar()
   }
 
   sAppointment * pCal = Calendar; // creating a pointer to iterate through all appointments
-  sDate * dates = calloc(CountAppointments + 1, sizeof(sDate)); // creating an array where all the different appointment dates are stored
+  sDate * dates = calloc(AppointmentCount + 1, sizeof(sDate)); // creating an array where all the different appointment dates are stored
   if (!dates) exit(!RaiseMallocException("dates"));
 
   sDate * pDates = dates;
@@ -120,7 +162,7 @@ void ListCalendar()
   dates = tmpDates;
   pDates = dates;
 
-  int i, outputCount = 0, remainingDatesToBeDisplayed = CountAppointments, headerIsPrinted = 0, page = 1; // not moving this up cuz this will probably be extracted into a function later on
+  int i, outputCount = 0, remainingDatesToBeDisplayed = AppointmentCount, headerIsPrinted = 0, page = 1; // not moving this up cuz this will probably be extracted into a function later on
   pCal = Calendar; // resetting appointment counter to first appointment
   for (i = 0; i < diffDatesFound; i++) // for every different date we found ...
   {
@@ -130,13 +172,13 @@ void ListCalendar()
     {
       if (pCal->Date.Year == (*pDates).Year && pCal->Date.Month == (*pDates).Month && pCal->Date.Day == (*pDates).Day) // if the current appointment date matches the current date to be output
       {
-        if(!headerIsPrinted)
+        if (!headerIsPrinted)
         {
-          int pageOutputLen = strlen("Appointment list\t\t\t\t\t       Page %02i from %02i");
+          int pageOutputLen = strlen("Appointment list\t\t\t\t\t       Page %02d from %02d");
           char * output = malloc(pageOutputLen + 1);
           if (output)
           {
-            snprintf(output, pageOutputLen, "Appointment list\t\t\t\t\t       Page %02i from %02i", page, CountAppointments % appointmentsPerPage ? CountAppointments / appointmentsPerPage + 1 : CountAppointments / appointmentsPerPage);
+            snprintf(output, pageOutputLen, "Appointment list\t\t\t\t\t       Page %02d from %02d", page, AppointmentCount % appointmentsPerPage ? AppointmentCount / appointmentsPerPage + 1 : AppointmentCount / appointmentsPerPage);
             printFunctionHeader(output);
             free(output);
           }
@@ -146,17 +188,20 @@ void ListCalendar()
           printLine('=', 78);
           PrintNewLine(1);
 
-          printf("%s, %02i.%02i.%04i\n", getAppointmentDay(pDates->DayOfTheWeek), pDates->Day, pDates->Month, pDates->Year); // prints header for every different date
+          printf("%s, %02d.%02d.%04i\n", getAppointmentDay(pDates->DayOfTheWeek), pDates->Day, pDates->Month, pDates->Year); // prints header for every different date
           printLine('-', 15);
           PrintNewLine(1);
 
           headerIsPrinted = 1;
         }
+        char * end_time = NULL;
+        if (pCal->Duration) end_time = add_time(pCal);
 
-        printf("  %02i:%02i -> %-15s | ", pCal->Time.Hours, pCal->Time.Minutes, (pCal->Location) ? pCal->Location : "No location set");
-        printf(((pCal->Description ? strlen(pCal->Description) : 0) < 49) ? "%-48s" : "%-.44s ...", (pCal->Description) ? pCal->Description : "No description available ...");
+        printf("  %02d:%02d %7s -> %-15s | ", pCal->Time.Hours, pCal->Time.Minutes, pCal->Duration ? end_time : " ", (pCal->Location) ? pCal->Location : "No location set");
+        printf(((pCal->Description ? strlen(pCal->Description) : 0) < 41) ? "%-40s" : "%-.36s ...", (pCal->Description) ? pCal->Description : "No description available ...");
         PrintNewLine(1);
         outputCount++;
+        if (end_time) free(end_time);
       }
       pCal++; // goto next appointment
 
@@ -176,8 +221,7 @@ void ListCalendar()
           free(output);
           output = NULL;
         }
-        else
-          waitForEnter("show the next appointments");
+        else waitForEnter("show the next appointments");
 
         clearScreen();
       }
@@ -205,7 +249,7 @@ void ListCalendar()
   waitForEnter("exit to main menu");
 };
 
-void printFunctionHeader(char* title)
+void printFunctionHeader(char * title)
 {
   clearScreen();
   printf("%s\n", title);
@@ -213,7 +257,7 @@ void printFunctionHeader(char* title)
   PrintNewLine(2);
 }
 
-char* getAppointmentDay(eDayOfTheWeek dayOfTheWeek)
+char * getAppointmentDay(eDayOfTheWeek dayOfTheWeek)
 {
   switch (dayOfTheWeek)
   {
@@ -238,7 +282,7 @@ void getDiffDates(sAppointment * pCal, sDate * dates, unsigned short * diffDates
   pNextDateStorePtr++;
   pCal++; // start with second date
   int i;
-  for (i = 0; i < CountAppointments - 1; i++) // since day is a mandatory field and is validated (>1) we use this to go through every created appointment
+  for (i = 0; i < AppointmentCount - 1; i++) // since day is a mandatory field and is validated (>1) we use this to go through every created appointment
   {
     while (pDates->Day) // same as above but in the dates array. We iterate through every in dates saved different date
     {
@@ -265,10 +309,45 @@ void getDiffDates(sAppointment * pCal, sDate * dates, unsigned short * diffDates
   pDates = NULL;
 }
 
+char * add_time(sAppointment * app)
+{
+  sTime t;
+
+  t.Seconds = app->Time.Seconds + app->Duration->Seconds;
+  t.Minutes = app->Time.Minutes + app->Duration->Minutes;
+  t.Hours = app->Time.Hours + app->Duration->Hours;
+
+  if (t.Seconds >= 60) {
+    t.Minutes += t.Seconds / 60;
+    t.Seconds %= 60;
+  }
+
+  if (t.Minutes >= 60) {
+    t.Hours += t.Minutes / 60;
+    t.Minutes %= 60;
+  }
+
+  t.Hours %= 24; // Limiting the hours to a 24-hour day
+  // cannot interpret if the end time is on a new day, do not know in which way I would like to implement it (+1)
+
+  char * time = malloc(8);
+  if (time)
+  {
+    sprintf(time, "- %02d:%02d", t.Hours, t.Minutes);
+    return time;
+  }
+  else
+  {
+    RaiseMallocException("time");
+    waitForEnter("exit");
+    exit(EXIT_FAILURE);
+  }
+}
+
 void FreeCalendar()
 {
   sAppointment * pCal = Calendar;
-  for (int i = 0; i < CountAppointments; i++)
+  for (int i = 0; i < AppointmentCount; i++)
   {
     freeAppointment(pCal);
     pCal++;

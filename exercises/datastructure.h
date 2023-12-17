@@ -7,7 +7,7 @@
 
   #define MAXAPPOINTMENTS 100
 
-  extern int CountAppointments;
+  extern int AppointmentCount;
 
   typedef enum
   {

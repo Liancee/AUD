@@ -1,80 +1,16 @@
-# Open tasks:
+Task 5:
 
-## Exercise 1:
-
-- [x] Task 1
-- [x] Task 2
-- [x] Task 3
-- [ ] Task 4
-
-## Exercise 2:
-
-- [ ] Task 1.1
-- - [ ] a
-- - [ ] b
-- [ ] Task 1.2
-- - [ ] a
-- - [ ] b
-- - [ ] c
-- [ ] Task 2.1
-- - [ ] a
-- - [ ] b
-- - [ ] c
-- [ ] Task 2.2
-- - [ ] a
-- - [ ] b
-- - [ ] c
-- [x] Task 2.3
-- - [x] a
-- - [x] b
-- - [x] c
-- - [x] d
-
-
-## Exercise 3:
-
-- [ ] Task 3.1.1
-- - [ ] a
-- - [ ] b
-- [ ] Task 3.1.2
-- - [ ] a
-- - [ ] b
-- - [ ] c
-- - [ ] d
-- [ ] Task 3.1.3
-- - [ ] a
-- - [ ] b
-- [ ] Task 3.1.4
-- [ ] Task 3.2
-- - [ ] a
-- - [ ] b
-- - [ ] c
-- - [ ] d
-- [ ] Task 3.3
-- - [ ] a
-- - [ ] b
-- - [ ] c
-- [ ] Task 3.4
-- - [ ] a
-- - [ ] b
-
-## Exercise 4:
-
-- [ ] Task 4.1
-- - [ ] a
-- - [ ] b
-- - [ ] c
-- - [ ] d
-- [ ] Task 4.2
-- - [ ] a
-- - [ ] b
-- - [ ] c
-- - [ ] d
-- [ ] Task 4.3
-- [ ] Task 4.4
-
-## Exercise 5:
-
-## Exercise 6:
-
-## Exercise 7:
+Two things are "missing" for the task:
+	- as mentioned in my last submission there have to 
+	  be added the constants F_OK and EEXIST for it to
+	  work under windows for some ppl
+	  
+	- for task 3/4 I wrote code to display appointments
+	  grouped by their date into the listCalendar() 
+	  function. When I now sort the appointments for 
+	  something that is not date, they are sorted cor-
+	  rectly in the internal Calendar array. But when
+	  then displayed through the listCalendar func,
+	  they get output by date but listed by the sort 
+	  criterium wihtin the same date (is that the in-
+	  tended way?)

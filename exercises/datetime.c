@@ -8,7 +8,7 @@
 // function declarations
 int isTimeValid(int, int, int);
 
-int GetDate(char* prompt, sDate* date)
+int GetDate(char * prompt, sDate * date)
 {
   if (!date)
   {
@@ -17,7 +17,7 @@ int GetDate(char* prompt, sDate* date)
   }
 
   int isInputValid = 0, isDateValid = 0;
-  char* input = calloc(1, sizeof("dd.mm.yyyy"));
+  char * input = calloc(1, sizeof("dd.mm.yyyy"));
   if (!input) return RaiseMallocException("input");
 
   PrintPrompt(prompt);
@@ -52,23 +52,23 @@ int GetDate(char* prompt, sDate* date)
   return 1;
 }
 
-void PrintPrompt(char* prompt)
+void PrintPrompt(char * prompt)
 {
   printf("  %-12s: ", prompt);
 }
 
-int GetDateFromString(char* input, sDate* date)
+int GetDateFromString(char * input, sDate * date)
 {
-  char* pDay = input;
-  char* pMonth = 0;
-  char* pYear = 0;
+  char * pDay = input;
+  char * pMonth = 0;
+  char * pYear = 0;
 
   int day = 0, month = 0, year = 0;
 
   // dd.mm.yyyy set pointer to first '.' cuz right after starts the month
-  while(*input != '.')
+  while (*input != '.')
   {
-    if(*input == '\0') return 0;
+    if (*input == '\0') return 0;
     input++;
   }
 
@@ -76,9 +76,9 @@ int GetDateFromString(char* input, sDate* date)
   pMonth = ++input;
 
   // as above set pointer to second '.' cuz right after starts the year
-  while(*input != '.')
+  while (*input != '.')
   {
-    if(*input == '\0') return 0;
+    if (*input == '\0') return 0;
     input++;
   }
 
@@ -91,7 +91,7 @@ int GetDateFromString(char* input, sDate* date)
   year = atoi(pYear);
 
   // set the struct values with our variables if they are valid and return 1 else return 0
-  if(isDateValid(day, month, year))
+  if (isDateValid(day, month, year))
   {
     date->Day = day;
     date->Month = month;
@@ -153,7 +153,7 @@ int GetTime(char * prompt, sTime * time, unsigned short isEmptyInputAllowed)
   // if (!time) return RaiseMallocException("time");
 
   int isInputValid = 0, isTimeValid = 0;
-  char* input = calloc(sizeof("hh:mm:ss"), sizeof(char));
+  char * input = calloc(sizeof("hh:mm:ss"), sizeof(char));
   if (!input) return RaiseMallocException("input");
 
   PrintPrompt(prompt);
@@ -175,7 +175,7 @@ int GetTime(char * prompt, sTime * time, unsigned short isEmptyInputAllowed)
       RESTORE_POS;
       if (isTimeValid)
       {
-        if(time->Seconds == -1) printf("%02i:%02i%*s\n", time->Hours, time->Minutes, 50, "");
+        if (time->Seconds == -1) printf("%02i:%02i%*s\n", time->Hours, time->Minutes, 50, "");
         else printf("%02i:%02i:%02i%*s\n", time->Hours, time->Minutes, time->Seconds, 50, "");
       }
       else
@@ -218,9 +218,9 @@ int GetTimeFromString(char * input, sTime * time)
   int hour = 0, min = 0, sec = -1;
 
   // hh:mm[:ss] set pointer to first ':' cuz right after start the minutes
-  while(*input != ':')
+  while (*input != ':')
   {
-    if(*input == '\0') return 0;
+    if (*input == '\0') return 0;
     input++;
   }
 
@@ -228,14 +228,14 @@ int GetTimeFromString(char * input, sTime * time)
   pMin = ++input;
 
   // as above set pointer to second ':' cuz right after start the seconds
-  while(*input != ':')
+  while (*input != ':')
   {
-    if(*input == '\0') break;
+    if (*input == '\0') break;
     input++;
   }
 
   // if specified set seconds pointer and parse it to int
-  if(*input != '\0')
+  if (*input != '\0')
   {
     pSec = ++input;
     sec = atoi(pSec);
@@ -247,7 +247,7 @@ int GetTimeFromString(char * input, sTime * time)
 
 
   // set the struct values with our variables if they are valid and return 1 else return 0
-  if(isTimeValid(hour, min, sec))
+  if (isTimeValid(hour, min, sec))
   {
     /*sTime t;
     t.Hours = hour;

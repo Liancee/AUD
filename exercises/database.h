@@ -1,11 +1,11 @@
 #ifndef DATABASE_H
   #define DATABASE_H
 
-  /***************************************************************************
-   *  This module contains methods on saving and loading data to/from a xml file.
-   *  It also holds the path to the save file and sanitizes the in,- output from the file.
-   * Detailed information about each method and its arguments will be provided seperately.
-   ***************************************************************************/
+/***************************************************************************
+ *  This module contains methods on saving and loading data to/from a xml file.
+ *  It also holds the path to the save file and sanitizes the in,- output from the file.
+ * Detailed information about each method and its arguments will be provided seperately.
+ ***************************************************************************/
 
   extern const char * dirName;
   extern const char * fileName;

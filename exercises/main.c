@@ -8,22 +8,22 @@
 int main()
 {
   int userChoice = 0;
-  char *menuTitle = "Appointment manager V 0.2";
-  char *menuItems[] = {
+  char * menuItems[] =
+  {
       "Create appointment",
       "Edit appointment",
       "Delete appointment",
       "Search appointment",
       "Sort appointments",
       "List appointments",
-      "Exit program"};
-  int countMenuItems = 7;
+      "Exit program"
+  };
 
   if (!loadCalendar()) exit(EXIT_FAILURE);
 
   do
   {
-    userChoice = GetMenu(menuTitle, menuItems, countMenuItems);
+    userChoice = GetMenu("Appointment manager V 0.2", menuItems, sizeof(menuItems) / sizeof(menuItems[0]));
 
     switch (userChoice)
     {

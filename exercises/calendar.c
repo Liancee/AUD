@@ -1,6 +1,3 @@
-//
-// Created by Liance on 12.10.23.
-//
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -29,6 +26,7 @@ void CreateAppointment()
     printf("You have reached the max amount of available appointments. Please upgrade to Appointment manager V 0.2 Pro to have more appointment slots! [$(5)$] ");
     waitForEnter("continue");
     clearScreen();
+
     return;
   }
 
@@ -38,21 +36,26 @@ void CreateAppointment()
   printf("  %-12s:\n  %-12s:\n  %-12s:\n  %-12s:\n  %-12s:", "Date", "Time", "Description", "Location", "Duration");
   RESTORE_POS;
 
-  if (!GetDate("Date", &(pCal->Date)))
-    exit(EXIT_FAILURE);
+  if (!GetDate("Date", &(pCal->Date))) exit(EXIT_FAILURE);
 
-  if (!GetTime("Time", &(pCal->Time)))
-    exit(EXIT_FAILURE);
+  if (!GetTime("Time", &(pCal->Time), 0)) exit(EXIT_FAILURE);
 
-  if (!GetText("Description", 100, &(pCal->Description), 1))
-    exit(EXIT_FAILURE);
+  if (!GetText("Description", 100, &(pCal->Description), 1)) exit(EXIT_FAILURE);
 
-  if (!GetText("Location", 15, &(pCal->Location), 1))
-    exit(EXIT_FAILURE);
+  if (!GetText("Location", 15, &(pCal->Location), 1)) exit(EXIT_FAILURE);
 
-  pCal->Duration = malloc(sizeof(sTime)); // local struct != null => malloc
-  if (!GetTime("Duration", pCal->Duration))
-    exit(EXIT_FAILURE);
+  sTime time;
+  if (!GetTime("Duration", &time, 1)) exit(EXIT_FAILURE);
+  if (time.Hours != 255)
+  {
+    pCal->Duration = malloc(sizeof(sTime));
+    if (pCal->Duration) *(pCal->Duration) = time; //pCal->Duration = &time; // TODO what happens here exactly? address to dynamic pointer or dynamic pointer to address?
+    else
+    {
+      RaiseMallocException("pCal->Duration");
+      exit(EXIT_FAILURE);
+    }
+  }
 
   printf("\n  Appointment has been saved!\n\n");
   waitForEnter("continue");
@@ -100,8 +103,8 @@ void ListCalendar()
 
   sAppointment * pCal = Calendar; // creating a pointer to iterate through all appointments
   sDate * dates = calloc(CountAppointments + 1, sizeof(sDate)); // creating an array where all the different appointment dates are stored
-  if (!dates)
-    exit(!RaiseMallocException("dates")); // TODO does this work?
+  if (!dates) exit(!RaiseMallocException("dates"));
+
   sDate * pDates = dates;
   unsigned short diffDatesFound = 1; // we need diffDatesFound later to know how many different date groups have to be printed
 
@@ -121,8 +124,7 @@ void ListCalendar()
   pCal = Calendar; // resetting appointment counter to first appointment
   for (i = 0; i < diffDatesFound; i++) // for every different date we found ...
   {
-    if (pDates->DayOfTheWeek == NotADay) // hopefully we never see this one equal to true
-      return;
+    if (pDates->DayOfTheWeek == NotADay) return; // hopefully we never see this one equal to true
 
     while (pCal->Date.Day) // same as in loop above => if appointment "exists/is set" TODO doesnt this loop go outofbounds?
     {
@@ -138,8 +140,7 @@ void ListCalendar()
             printFunctionHeader(output);
             free(output);
           }
-          else
-            printFunctionHeader("Appointment list");
+          else printFunctionHeader("Appointment list");
           output = NULL;
 
           printLine('=', 78);
@@ -191,8 +192,7 @@ void ListCalendar()
       printLine('-', 15);
       PrintNewLine(1);
     }
-    else
-      pDates++; // goto next date group that should be printed
+    else pDates++; // goto next date group that should be printed
     pCal = Calendar; // reset to first appointment
   }
   free(dates);
@@ -250,8 +250,7 @@ void getDiffDates(sAppointment * pCal, sDate * dates, unsigned short * diffDates
         isNewDate = 0; // no we already got this one
         break; // so we leave and go next appointment
       }
-      else
-        isNewDate = 1; // yes date is different
+      else isNewDate = 1; // yes date is different
       pDates++; // next date in dates to be compared against
     }
     if (isNewDate)
@@ -269,7 +268,7 @@ void getDiffDates(sAppointment * pCal, sDate * dates, unsigned short * diffDates
 void FreeCalendar()
 {
   sAppointment * pCal = Calendar;
-  while(pCal->Date.Day)
+  for (int i = 0; i < CountAppointments; i++)
   {
     freeAppointment(pCal);
     pCal++;
@@ -278,10 +277,7 @@ void FreeCalendar()
 
 void freeAppointment(sAppointment * app)
 {
-  if (app->Description)
-    free(app->Description);
-  if (app->Location)
-    free(app->Location);
-  if (app->Duration)
-    free(app->Duration);
+  if (app->Description) free(app->Description);
+  if (app->Location) free(app->Location);
+  if (app->Duration) free(app->Duration);
 }

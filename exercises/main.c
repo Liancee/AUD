@@ -1,7 +1,3 @@
-//
-// Created by Liance on 12.10.23.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "menu.h"
@@ -23,8 +19,7 @@ int main()
       "Exit program"};
   int countMenuItems = 7;
 
-  if (!loadCalendar())
-    exit(EXIT_FAILURE);
+  if (!loadCalendar()) exit(EXIT_FAILURE);
 
   do
   {

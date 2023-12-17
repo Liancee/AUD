@@ -1,71 +1,67 @@
-//
-// Created by Liance on 12.10.23.
-//
-
 #ifndef CALENDAR_H
-#define CALENDAR_H
+  #define CALENDAR_H
 
-extern const int appointmentsPerPage;
+  extern const int appointmentsPerPage;
 
-/***************************************************************************
- *  This module contains methods to manipulate an appointment in many different ways.
-  Detailed information about each method and its arguments will be provided seperately.
- ***************************************************************************/
+  /***************************************************************************
+   *  This module contains methods to manipulate an appointment in many different ways.
+    Detailed information about each method and its arguments will be provided seperately.
+   ***************************************************************************/
 
-/***************************************************************************
- *  CreateAppointment
- *  Creates an appointment.
- *  Parameter: None
- *  Result: void
- ***************************************************************************/
-void CreateAppointment();
+  /***************************************************************************
+   *  CreateAppointment
+   *  Creates an appointment.
+   *  Parameter: None
+   *  Result: void
+   ***************************************************************************/
+  void CreateAppointment();
 
-/***************************************************************************
- *  EditAppointment
- *  Edits an appointment.
- *  Parameter: None
- *  Result: void
- ***************************************************************************/
-void EditAppointment();
+  /***************************************************************************
+   *  EditAppointment
+   *  Edits an appointment.
+   *  Parameter: None
+   *  Result: void
+   ***************************************************************************/
+  void EditAppointment();
 
-/***************************************************************************
- *  DeleteAppointment
- *  Deletes an appointment
- *  Parameter: None
- *  Result: void
- ***************************************************************************/
-void DeleteAppointment();
+  /***************************************************************************
+   *  DeleteAppointment
+   *  Deletes an appointment
+   *  Parameter: None
+   *  Result: void
+   ***************************************************************************/
+  void DeleteAppointment();
 
-/***************************************************************************
- *  SearchAppointment
- *  Searches through the appointments.
- *  Parameter: None
- *  Result: void
- ***************************************************************************/
-void SearchAppointment();
+  /***************************************************************************
+   *  SearchAppointment
+   *  Searches through the appointments.
+   *  Parameter: None
+   *  Result: void
+   ***************************************************************************/
+  void SearchAppointment();
 
-/***************************************************************************
- *  SortCalendar
- *  Sorts the appointments.
- *  Parameter: None
- *  Result: void
- ***************************************************************************/
-void SortCalendar();
+  /***************************************************************************
+   *  SortCalendar
+   *  Sorts the appointments.
+   *  Parameter: None
+   *  Result: void
+   ***************************************************************************/
+  void SortCalendar();
 
-/***************************************************************************
- *  ListCalendar
- *  Lists all appointments.
- *  Parameter: None
- *  Result: void
- ***************************************************************************/
-void ListCalendar();
+  /***************************************************************************
+   *  ListCalendar
+   *  Lists all appointments.
+   *  Parameter: None
+   *  Result: void
+   ***************************************************************************/
+  void ListCalendar();
 
-/***************************************************************************
- *  FreeCalendar
- *  Frees the dynamically allocated memory for each appointment in the Calendar.
- *  Parameter: None
- *  Result: void
- ***************************************************************************/
-void FreeCalendar();
+  /***************************************************************************
+   *  FreeCalendar
+   *  Frees the dynamically allocated memory for each appointment in the Calendar.
+   *  Parameter: None
+   *  Result: void
+   ***************************************************************************/
+  void FreeCalendar();
 
 #endif // CALENDAR_H

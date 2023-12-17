@@ -1,46 +1,46 @@
 #ifndef DATASTRUCTURE_H
-#define DATASTRUCTURE_H
+  #define DATASTRUCTURE_H
 
-/***************************************************************************
- *  This module contains various data structures, enumerations.
- ***************************************************************************/
+  /***************************************************************************
+   *  This module contains various data structures, enumerations.
+   ***************************************************************************/
 
-#define MAXAPPOINTMENTS 100
+  #define MAXAPPOINTMENTS 100
 
-extern int CountAppointments;
+  extern int CountAppointments;
 
-typedef enum
-{
-    NotADay,
-    Mo,
-    Tu,
-    We,
-    Th,
-    Fr,
-    Sa,
-    Su
-} eDayOfTheWeek;
+  typedef enum
+  {
+      NotADay,
+      Mo,
+      Tu,
+      We,
+      Th,
+      Fr,
+      Sa,
+      Su
+  } eDayOfTheWeek;
 
-typedef struct
-{
-    int Day, Month, Year;
-    eDayOfTheWeek DayOfTheWeek;
-} sDate;
+  typedef struct
+  {
+      int Day, Month, Year;
+      eDayOfTheWeek DayOfTheWeek;
+  } sDate;
 
-typedef struct
-{
-    int Hours, Minutes, Seconds;
-} sTime;
+  typedef struct
+  {
+      int Hours, Minutes, Seconds;
+  } sTime;
 
-typedef struct
-{
-    sDate Date;
-    sTime Time;
-    char* Description;
-    char* Location;
-    sTime* Duration;
-} sAppointment;
+  typedef struct
+  {
+      sDate Date;
+      sTime Time;
+      char* Description;
+      char* Location;
+      sTime* Duration;
+  } sAppointment;
 
-extern sAppointment Calendar[];
+  extern sAppointment Calendar[];
 
 #endif // DATASTRUCTURE_H

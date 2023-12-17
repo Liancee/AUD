@@ -32,6 +32,7 @@ int askAgain()
     }
     isInputValid = askAgainInternal();
   } while (!isInputValid);
+
   return 1;
 }
 
@@ -52,6 +53,7 @@ int askAgainPos(int row, int col)
     }
     isInputValid = askAgainInternal();
   } while (!isInputValid);
+
   return 1;
 }
 
@@ -66,10 +68,8 @@ int askAgainInternal()
     clearBuffer();
     return 0;
   }
-  else if (c == 'n' || c == 'N')
-    exit(0);
-  else if (c == 'y' || c == 'Y')
-    return 1;
+  else if (c == 'n' || c == 'N') exit(EXIT_SUCCESS); // inverted logic honestly..
+  else if (c == 'y' || c == 'Y') return 1;
   else return 0; // we should never be here
 }
 
@@ -77,8 +77,7 @@ void resetArray(int *a, int count)
 {
   // While array has values != 0, set the current value to 0(*a = 0) and move the pointer to the next one afterwards (a++)
   // Note: "while (*a++ = 0)" not possible loop will stop because a = 0 (false) before moving pointer (a++)
-  while (*a)
-    *a++ = 0;
+  while (*a) *a++ = 0;
 }
 
 void waitForEnter(char * doWhat)
@@ -87,8 +86,7 @@ void waitForEnter(char * doWhat)
 
   printf("Press Enter to %s ...", doWhat);
 
-  do
-    scanf("%1c", &c);
+  do scanf("%1c", &c);
   while (c != '\n');
 }
 
@@ -119,13 +117,10 @@ int askYesOrNo(char *question)
 
     printf("%s", question);
     scanf("%c", &c);
-    if (c != '\n')
-      clearBuffer();
+    if (c != '\n') clearBuffer();
 
-    if (c == 'n' || c == 'N')
-      return 0;
-    else if (c == 'y' || c == 'Y')
-      return 1;
+    if (c == 'n' || c == 'N') return 0;
+    else if (c == 'y' || c == 'Y') return 1;
     else
     {
       printf("Invalid input! Please enter 'y/Y' or 'n/N' when prompted! ");
@@ -138,8 +133,7 @@ int askYesOrNo(char *question)
 
 void printLine(char c, int count)
 {
-  for (int i = 0; i < count; i++)
-    printf("%c", c);
+  for (int i = 0; i < count; i++) printf("%c", c);
 
   fflush(stdout);
 }
@@ -148,12 +142,10 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
 {
   int isInputValid = 0, len;
   char format[15];
-  if (maxLen <= 0 || !text)
-    return 0;
+  if (maxLen <= 0 || !text) return 0;
 
   char* input = calloc(maxLen + 1, sizeof(char));
-  if (!input)
-    return RaiseMallocException("input");
+  if (!input) return RaiseMallocException("input");
 
   sprintf(format, "%%%i[^\n]", maxLen);
 
@@ -183,8 +175,7 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
           strcpy(*text, input);
           printf("%-*s\n", 100, input);
         }
-        else
-          return RaiseMallocException("*text");
+        else return RaiseMallocException("*text");
       }
       else
       {
@@ -194,8 +185,7 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
           waitForEnter("continue");
           isInputValid = 0;
         }
-        else
-          isInputValid = 1;
+        else isInputValid = 1;
       }
     }
     else
@@ -215,17 +205,15 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
   } while (!isInputValid);
   free(input);
   input = NULL;
+
   return isInputValid;
 }
 
 void CharReplace(char* input, char toBeReplaced, char replacement)
 {
-  int i;
+  if (input == NULL) return;
 
-  if (input == NULL)
-    return;
-
-  for (i = 0; input[i] != '\0'; i++)
+  for (int i = 0; input[i] != '\0'; i++)
     if (input[i] == toBeReplaced)
       input[i] = replacement;
 }
@@ -243,5 +231,6 @@ int RaiseMallocException(char * varName)
 {
   fprintf(stderr, "Memory allocation of %s failed. Program will exit. ", varName);
   waitForEnter("continue");
+
   return 0;
 }

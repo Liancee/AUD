@@ -1,7 +1,3 @@
-//
-// Created by liance on 28/11/2023.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -25,21 +21,23 @@ const char * fileName = "calendar.xml";
 
 typedef enum
 {
-  dateOffset = 6,
-  timeOffset = 6,
-  descriptionOffset = 13,
-  locationOffset = 10,
-  durationOffset = 10,
-  appointmentStartOffset = 13,
-  appointmentEndOffset = 14,
-  calendarEndOffset = 11
+  date_offset = 6,
+  time_offset = 6,
+  description_offset = 13,
+  location_offset = 10,
+  duration_offset = 10,
+  appointment_start_offset = 13,
+  appointment_end_offset = 14,
+  calendar_start_offset = 10,
+  calendar_end_offset = 11
 } eTagOffsets;
 
 void saveAppointment(sAppointment, FILE *);
 char* getValue(char *, eTagOffsets);
-int raiseXmlLoadException(char *);
-int loadAppointment(FILE *, sAppointment *);
-void appointmentCleanup(sAppointment *);
+int raiseXmlLoadException(char *, unsigned short);
+int loadAppointment(FILE *, sAppointment *,  unsigned short *);
+void appointment_sanitization(sAppointment *, unsigned short);
+int raiseAlreadyLoadedException(char *, unsigned short);
 
 int saveCalendar()
 {
@@ -48,19 +46,16 @@ int saveCalendar()
   sAppointment * pCal = Calendar;
 
   FILE * file = createAndOpenXmlFile(); // TODO if the windows compiler is too old \\ has to be used instead of / (see line 11-17) (but probably somewhere inside of function)
-  if (!file)
-    return 0;
+  if (!file) return 0;
 
   fprintf(file, "<Calendar>\n");
   int i = 0;
-  // TODO in the line below we get an error if we dont directly write into calendar in createAppointment() in calendar.c cuz we have to access the sDate struct differently
+  // for (int i = 0; i < MAXAPPOINTMENTS; i++; // TODO test after save is fixed
   while (pCal->Date.Day) // since day is a mandatory field and is validated (>1) we use this to go through every created appointment
   {
     i++;
     saveAppointment(*pCal, file);
-    if (i == MAXAPPOINTMENTS)
-      break;
-
+    if (i == MAXAPPOINTMENTS) break;
     pCal++;
   }
   fprintf(file, "</Calendar>\n");
@@ -85,14 +80,11 @@ void saveAppointment(sAppointment app, FILE * file)
 
   fprintf(file, "\t\t<Time>%02i:%02i:%02i</Time>\n", app.Time.Hours, app.Time.Minutes, app.Time.Seconds == -1 ? 00 : app.Time.Seconds);
 
-  if (app.Description)
-    fprintf(file, "\t\t<Description>%s</Description>\n", app.Description);
+  if (app.Description) fprintf(file, "\t\t<Description>%s</Description>\n", app.Description);
 
-  if (app.Location)
-    fprintf(file, "\t\t<Location>%s</Location>\n", app.Location);
-
-  if (app.Duration && (app.Duration->Hours || app.Duration->Minutes || app.Duration->Seconds > 0)) // TODO this has to be changed according to the duration input changes; >0 is important cuz if sec not set => -1
-    fprintf(file, "\t\t<Duration>%02i:%02i:%02i</Duration>\n", app.Duration->Hours, app.Duration->Minutes, app.Duration->Seconds == -1 ? 00 : app.Duration->Seconds);
+  if (app.Location) fprintf(file, "\t\t<Location>%s</Location>\n", app.Location);
+  // Seconds > 0 is important cuz if sec not set => -1
+  if (app.Duration && (app.Duration->Hours || app.Duration->Minutes || app.Duration->Seconds > 0)) fprintf(file, "\t\t<Duration>%02i:%02i:%02i</Duration>\n", app.Duration->Hours, app.Duration->Minutes, app.Duration->Seconds == -1 ? 00 : app.Duration->Seconds);
 
   fprintf(file, "\t</Appointment>\n");
 }
@@ -103,11 +95,10 @@ FILE * createAndOpenXmlFile()
   char * fileMode = "wt";
 
 #ifdef _WIN32
-  if (!mkdir(dirName) || errno == EEXIST)
+  if (!mkdir(dirName) || errno == EEXIST) // TODO needed to add constants F_OK and EEXIST?
   {
     file = openSaveFile(fileMode);
-    if (!file)
-      return NULL;
+    if (!file) return NULL;
   }
   /*else if (errno == EEXIST)
   {
@@ -148,8 +139,7 @@ FILE * createAndOpenXmlFile()
 FILE * openSaveFile(char * fileMode)
 {
   char * filePath = GetFilePath();
-  if (!filePath || (strchr(fileMode, 'r') && access(filePath, F_OK)))
-    return NULL;
+  if (!filePath || (strchr(fileMode, 'r') && access(filePath, F_OK))) return NULL;
 
   FILE * file;
   file = fopen(filePath, fileMode);
@@ -163,6 +153,7 @@ FILE * openSaveFile(char * fileMode)
   }
   free(filePath);
   filePath = NULL;
+
   return file;
 }
 
@@ -170,10 +161,8 @@ char* GetFilePath()
 {
   size_t pathLength = strlen(dirName) + strlen(fileName) + 5;  // extra characters for "/ + NULL terminator"
   char * filePath = malloc(pathLength);
-  if (filePath)
-    snprintf(filePath, pathLength, "%s/%s", dirName, fileName);
-  else
-    return RaiseMallocException("filePath") == 0 ? NULL : NULL;
+  if (filePath) snprintf(filePath, pathLength, "%s/%s", dirName, fileName);
+  else return RaiseMallocException("filePath") == 0 ? NULL : NULL;
 
   return filePath;
 }
@@ -187,33 +176,32 @@ int loadCalendar()
   if (file)
   {
     char * row = malloc(20), * pRow; // TODO 20 => estimated max char count if longest tag + <> and \t or ' '; might be to change if longer tags get added; anything after 20 should be cleared by fclearBuffer()?
-    if (!row)
-      return RaiseMallocException("row");
+    if (!row) return RaiseMallocException("row");
 
+    unsigned short line = 0;
     do
     {
       *row = '\0'; // why this? so it is initialized, or we definitely have an end?
       fscanf(file, "%19[^\n]", row);
       fclearBuffer(file);
       pRow = row;
+      line++;
 
-      while (*pRow == ' ' || *pRow == '\t')
-        pRow++;
+      while (*pRow == ' ' || *pRow == '\t') pRow++;
 
-      if (!strncmp(pRow, "<Appointment>", appointmentStartOffset))
+      if (!strncmp(pRow, "<Appointment>", appointment_start_offset))
       {
-        if (!loadAppointment(file, pCal)) // TODO ask: instead of using a pointer pCal, replace it with Calendar[CountAppointments] everywhere? -> then loadAppointment would need pCal as parameter
-          return 0;
+        if (!loadAppointment(file, pCal, &line)) return 0; // TODO ask: instead of using a pointer pCal, replace it with Calendar[CountAppointments] everywhere? -> then loadAppointment would need pCal as parameter
         else
         {
-          appointmentCleanup(pCal);
+          appointment_sanitization(pCal, line);
 
           pCal++;
           CountAppointments++;
 
           if (CountAppointments == MAXAPPOINTMENTS)
           {
-            char * filePath = GetFilePath();
+            char *filePath = GetFilePath();
             fprintf(stderr, "Loading appointments from %s stopped at the allowed max. count (%i) of the standard version.\nPlease upgrade to Appointment manager V 0.2 Pro to have more appointment slots! [$(5)$]\n\n", filePath, MAXAPPOINTMENTS);
             waitForEnter("continue");
             free(filePath);
@@ -227,141 +215,158 @@ int loadCalendar()
           }
         }
       }
-      else if (!strncmp(pRow, "</Calendar>", calendarEndOffset))
-        break;
-      else if (feof(file))
-        return raiseXmlLoadException("</Calendar>"); // TODO if CRLF is missing at eof we get here too..
-      /*else
-        raiseXmlLoadException("file corrupt");*/
+      else if (!strncmp(pRow, "<Calendar>", calendar_start_offset)) continue;
+      else if (!strncmp(pRow, "</Calendar>", calendar_end_offset)) break;
+      else if (feof(file)) return raiseXmlLoadException("</Calendar>", line);
+      else
+      {
+        char *filePath = GetFilePath();
+        fprintf(stderr, "Corrupt file, critical error while trying to load appointments from %s line %d. Program will now exit. \n", filePath, line);
+        free(filePath);
+        filePath = NULL;
+        waitForEnter("continue");
 
-    } while (strncmp(pRow, "</Calendar>", calendarEndOffset));
+        return 0;
+      }
+
+    } while (strncmp(pRow, "</Calendar>", calendar_end_offset));
 
     free(row);
     row = NULL;
     pRow = NULL;
   }
-  else
-    return 1; // there is no file to be loaded
+  else return 1; // there is no file to be loaded
 
   fclose(file);
 
   return 1;
 }
 
-void appointmentCleanup(sAppointment * app)
-{
-  if (!app->Date.Day && !app->Date.Month && !app->Date.Year)
-    exit(!raiseXmlLoadException("<Date>"));
-
-  if (!app->Time.Seconds && !app->Time.Minutes && !app->Time.Hours)
-    exit(!raiseXmlLoadException("<Time>"));
-  else if (!app->Time.Seconds)
-    app->Time.Seconds = -1; // seconds are optional and if not set they are still saved in the xml as 00, so if that is the case seconds were not set and internally not set seconds are handled as -1
+void appointment_sanitization(sAppointment * app, unsigned short line)
+{ // date was illegally loaded, we should never get here
+  if (!app->Date.Day && !app->Date.Month && !app->Date.Year) exit(!raiseXmlLoadException("<Date>", line));
+  // time was illegally loaded, we should never get here
+  if (!app->Time.Seconds && !app->Time.Minutes && !app->Time.Hours) exit(!raiseXmlLoadException("<Time>", line));
+  // seconds are optional and if not set they are still saved in the xml as 00, so if that is the case seconds were not set and internally not set seconds are handled as -1
+  else if (!app->Time.Seconds) app->Time.Seconds = -1;
 
   if (app->Duration)
   {
-    if (!app->Duration->Seconds && !app->Duration->Minutes && !app->Duration->Hours)
-      exit(!raiseXmlLoadException("<Duration>")); // TODO THIS IS FALSE THO SINCE RN U STILL CAN INPUT 00:00:00
-    else if (!app->Duration->Seconds)
-      app->Duration->Seconds = -1; // TODO if duration will be nullable this has to be changed
+    // *duration must either have values or duration is NULL, so we should never get here
+    if (!app->Duration->Seconds && !app->Duration->Minutes && !app->Duration->Hours) exit(!raiseXmlLoadException("<Duration>", line));
+    // same as in 'app->Time.Seconds = -1;' above
+    else if (!app->Duration->Seconds) app->Duration->Seconds = -1;
   }
 }
 
-int loadAppointment(FILE * file, sAppointment * app) // TODO is it better to give the struct oder pointer?
+int loadAppointment(FILE * file, sAppointment * app, unsigned short * line)
 {
   char * row = malloc(150), * pRow;
-  if (!row)
-    return RaiseMallocException("row");
+  if (!row) return RaiseMallocException("row");
 
+  unsigned short d = 0, t = 0, de = 0, l = 0, du = 0;
   do
   {
     *row = '\0'; // why this? so it is initialized, or we definitely have an end?
     fscanf(file, "%149[^\n]", row);
     fclearBuffer(file);
     pRow = row;
+    (*line)++;
 
-    while (*pRow == ' ' || *pRow == '\t')
-      pRow++;
-    if (!strncmp(pRow, "<Date>", dateOffset))
+    while (*pRow == ' ' || *pRow == '\t') pRow++;
+
+    if (!strncmp(pRow, "<Date>", date_offset))
     {
-      char * date = getValue(pRow, dateOffset);
+      if (d)
+        if(!raiseAlreadyLoadedException("Date", *line)) return 0;
+
+      char * date = getValue(pRow, date_offset);
       if (date)
       {
-        if (!GetDateFromString(date, &(app->Date)))
-          return raiseXmlLoadException("Date");
+        if (!GetDateFromString(date, &(app->Date))) return raiseXmlLoadException("Date", *line);
+        else d = 1;
       }
-      else
-          return raiseXmlLoadException("Date");
+      else return raiseXmlLoadException("Date", *line);
     }
-    else if (!strncmp(pRow, "<Time>", timeOffset))
+    else if (!strncmp(pRow, "<Time>", time_offset))
     {
-      char * time = getValue(pRow, dateOffset);
+      if (t)
+        if(!raiseAlreadyLoadedException("Time", *line)) return 0;
+
+      char * time = getValue(pRow, date_offset);
       if (time)
       {
-        if (!GetTimeFromString(time, &(app->Time)))
-          return raiseXmlLoadException("Time");
+        if (!GetTimeFromString(time, &(app->Time))) return raiseXmlLoadException("Time", *line);
+        else t = 1;
       }
-      else
-        return raiseXmlLoadException("Time");
+      else return raiseXmlLoadException("Time", *line);
     }
-    else if (!strncmp(pRow, "<Description>", descriptionOffset))
+    else if (!strncmp(pRow, "<Description>", description_offset))
     {
-      char * desc = getValue(pRow, descriptionOffset);
+      char * desc = getValue(pRow, description_offset);
       if (desc)
       {
-        if (app->Description) // TODO If a tag occurs wrongly twice we free the first entry and take the second
-          free(app->Description); // TODO maybe ask user if he wants the first or second? could even show both values with desc(new) and app->Description(old)
+        if (de)
+        {
+          if(!raiseAlreadyLoadedException("Description", *line)) return 0;
+          else if (app->Description) free(app->Description);
+        }
 
         app->Description = malloc(strlen(desc) + 1);
         if (app->Description)
+        {
           strcpy(app->Description, desc);
-        else
-          return RaiseMallocException("app->Description");
+          de = 1;
+        }
+        else return RaiseMallocException("app->Description");
       }
-      else
-        app->Description = NULL;
+      else app->Description = NULL;
     }
-    else if (!strncmp(pRow, "<Location>", locationOffset))
+    else if (!strncmp(pRow, "<Location>", location_offset))
     {
-      char * loc = getValue(pRow, locationOffset);
+      char * loc = getValue(pRow, location_offset);
       if (loc)
       {
-        if (app->Location) // TODO If a tag occurs wrongly twice we free the first entry and take the second
-          free(app->Location); // TODO maybe ask user if he wants the first or second? could even show both values with desc(new) and app->Description(old)
+        if (l)
+        {
+          if (!raiseAlreadyLoadedException("Location", *line)) return 0;
+          else if (app->Location) free(app->Location);
+        }
 
         app->Location = malloc(strlen(loc) + 1);
         if (app->Location)
+        {
           strcpy(app->Location, loc);
-        else
-          return RaiseMallocException("app->Location");
+          l = 1;
+        }
+        else return RaiseMallocException("app->Location");
       }
-      else
-        app->Location = NULL;
+      else app->Location = NULL;
     }
-    else if (!strncmp(pRow, "<Duration>", durationOffset))
+    else if (!strncmp(pRow, "<Duration>", duration_offset))
     {
-      if (app->Duration)
-        free(app->Duration); // TODO If a tag occurs wrongly twice we free the first entry and take the second; maybe ask user if he wants the first or second? cant show values here tho
-
-      char * dur = getValue(pRow, durationOffset);
+      char * dur = getValue(pRow, duration_offset);
       if (dur)
       {
+        if (du)
+        {
+          if(!raiseAlreadyLoadedException("Duration", *line)) return 0;
+          else if (app->Duration) free(app->Duration);
+        }
+
         app->Duration = malloc(sizeof(sTime));
         if (app->Duration)
         {
-          if (!GetTimeFromString(dur, app->Duration)) // TODO has also to be changed perhaps later on if it should be nullable
-            return raiseXmlLoadException("Duration");
+          if (!GetTimeFromString(dur, app->Duration)) return raiseXmlLoadException("Duration", *line);
+          else du = 1;
         }
-        else
-          return RaiseMallocException("app->Duration");
+        else return RaiseMallocException("app->Duration");
       }
-      else
-        app->Duration = NULL;
+      else app->Duration = NULL;
     }
-    else if (feof(file))
-      return raiseXmlLoadException("</Appointment>");
+    else if (feof(file)) return raiseXmlLoadException("</Appointment>", *line);
 
-  } while (strncmp(pRow, "</Appointment>", appointmentEndOffset));
+  } while (strncmp(pRow, "</Appointment>", appointment_end_offset));
 
   free(row);
   row = NULL;
@@ -390,12 +395,31 @@ char * getValue(char * row, eTagOffsets tagOffset)
     return NULL;
 }
 
-int raiseXmlLoadException(char* tag)
+int raiseXmlLoadException(char * tag, unsigned short line)
 {
   char * filePath = GetFilePath();
-  fprintf(stderr, "Critical error while trying to load appointments from %s.\n%s is a mandatory field and was either not found or illegally empty!\nProgram will now exit. ", filePath, tag); // TODO.11 ask can I somehow directly use GetFilePath() and free it afterwards?
+  fprintf(stderr, "Critical error while trying to load appointments from %s line %d.\n%s is a mandatory field and was either not found or illegally empty!\nProgram will now exit. ", filePath, line, tag);
   free(filePath);
   filePath = NULL;
   waitForEnter("continue");
   return 0;
+}
+
+int raiseAlreadyLoadedException(char * tag, unsigned short line)
+{
+  char * filePath = GetFilePath();
+  fprintf(stderr, "There was already a %s loaded for this appointment,\nperhaps there are two <%s> tags in line %d in one of your saved appointments?\n", tag, tag, line);
+  if(!askYesOrNo("Press y/Y to continue loading (the second entry is loaded) or n/N to exit the program. "))
+  {
+    printf("\nSave file location: %s\n", filePath);
+    waitForEnter("continue");
+    free(filePath);
+    filePath = NULL;
+    return 0;
+  }
+  clearScreen();
+  free(filePath);
+  filePath = NULL;
+
+  return 1;
 }

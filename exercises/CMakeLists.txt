@@ -9,4 +9,5 @@ add_executable(exercises main.c
         datetime.c
         calendar.c
         database.c
-        database.h)
+        database.h
+)

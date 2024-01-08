@@ -6,6 +6,8 @@
 #include "tools.h"
 #include "datetime.h"
 #include "escapesequenzen.h"
+#include "list.h"
+#include "sort.h"
 
 #ifdef _WIN32
   #include <Windows.h>
@@ -43,21 +45,20 @@ int saveCalendar()
 {
   // if (!CountAppointments) // we could ask if there are any appointments but then the file would not be created, so we create an empty file
 
-  sAppointment * pCal = Calendar;
+  sAppointment * pApp = First;
 
   FILE * file = createAndOpenXmlFile(); // TODO if the windows compiler is too old \\ has to be used instead of / (see line 11-17) (but probably somewhere inside of function)
   if (!file) return 0;
 
   fprintf(file, "<Calendar>\n");
-  int i = 0;
-  // for (int i = 0; i < MAXAPPOINTMENTS; i++; // TODO test after save is fixed
-  while (pCal->Date.Day) // since day is a mandatory field and is validated (>1) we use this to go through every created appointment
+
+  while (pApp) // since day is a mandatory field and is validated (>1) we use this to go through every created appointment
   {
-    i++;
-    saveAppointment(*pCal, file);
-    if (i == MAXAPPOINTMENTS) break;
-    pCal++;
+    saveAppointment(*pApp, file);
+
+    pApp = pApp->Next;
   }
+
   fprintf(file, "</Calendar>\n");
 
   fclose(file);
@@ -169,8 +170,6 @@ char* GetFilePath()
 
 int loadCalendar()
 {
-  sAppointment * pCal = Calendar;
-
   char * fileMode = "rt";
   FILE * file = openSaveFile(fileMode);
   if (file)
@@ -191,15 +190,35 @@ int loadCalendar()
 
       if (!strncmp(pRow, "<Appointment>", appointment_start_offset))
       {
-        if (!loadAppointment(file, pCal, &line)) return 0; // TODO ask: instead of using a pointer pCal, replace it with Calendar[CountAppointments] everywhere? -> then loadAppointment would need pCal as parameter
+        /* the following initialization will 0/NULL is really important, cuz when only declared, it was always the same
+        block, which resulted in following appointments when not having specified certain values having them from
+        previous appointment since the values were still in memory. Now they are overwritten with NULL/0, so they will
+        not have a value that is not theirs */
+        sAppointment app = { { 0, 0, 0 }, { 0, 0, 0 }, NULL, NULL, NULL, NULL, NULL }, *appointment = NULL;
+        //if (!app) return RaiseMallocException("app");
+
+        if (!loadAppointment(file, &app, &line)) return 0;
         else
         {
-          appointment_sanitization(pCal, line);
+          appointment_sanitization(&app, line);
 
-          pCal++;
+          if (IsDateValid(app.Date.Day, app.Date.Month, app.Date.Year) && IsTimeValid(app.Time.Hours, app.Time.Minutes, app.Time.Seconds))
+          {
+            appointment = malloc(sizeof(sAppointment));
+            if (appointment) *(appointment) = app; //appointment = &app; // TODO what happens here exactly? address to dynamic pointer or dynamic pointer to address?
+            else return RaiseMallocException("appointment");
+          }
+
+          if(InsertInDList(appointment, Sort_date_time))
+          {
+            fprintf(stderr, "Critical error while trying to insert an appointment!\nProgram will now exit. ");
+            waitForEnter("exit");
+            return 0;
+          }
           AppointmentCount++;
 
-          if (AppointmentCount == MAXAPPOINTMENTS)
+          // do not need below anymore after swapping to doubly linked list .. Sadge :(
+          /*if (AppointmentCount == MAXAPPOINTMENTS)
           {
             char *filePath = GetFilePath();
             fprintf(stderr, "Loading appointments from %s stopped at the allowed max. count (%i) of the standard version.\nPlease upgrade to Appointment manager V 0.2 Pro to have more appointment slots! [$(5)$]\n\n", filePath, MAXAPPOINTMENTS);
@@ -212,7 +231,7 @@ int loadCalendar()
             fclose(file);
 
             return 1;
-          }
+          }*/
         }
       }
       else if (!strncmp(pRow, "<Calendar>", calendar_start_offset)) continue;

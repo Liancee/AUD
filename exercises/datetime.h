@@ -5,8 +5,9 @@
 
   /***************************************************************************
    *  This module contains methods around common date related tasks
-    such as parsing, input correctness, etc. which are used within exercises.
-    Detailed information about each method and its arguments will be provided separately.
+   *  such as parsing, input correctness, etc. which are used within exercises.
+   *  Detailed information about each method and its arguments will be provided
+   *  separately.
    ***************************************************************************/
 
   /***************************************************************************
@@ -18,7 +19,7 @@
    *      - year: user input for the year as integer that has to be validated.
    *  Result: Returns 1=true if the date is valid otherwise 0=false.
    ***************************************************************************/
-  int isDateValid(int day, int month, int year);
+  int IsDateValid(int day, int month, int year);
 
   /***************************************************************************
    *  isLeapYear
@@ -85,6 +86,17 @@
    *  "default" value which would be set in such case.
    ***************************************************************************/
   eDayOfTheWeek getDayOfWeek(int day, int month, int year);
+
+  /***************************************************************************
+   *  IsTimeValid
+   *  Validates a time given as parameter.
+   *  Parameter:
+   *      - hour: user input for the hour as integer that has to be validated.
+   *      - min: user input for the minutes as integer that has to be validated.
+   *      - sec: optional user input for the seconds as integer that has to be validated.
+   *  Result: Returns 1=true if the time is valid otherwise 0=false.
+   ***************************************************************************/
+  int IsTimeValid(int hour, int min, int sec);
 
   void PrintPrompt(char * prompt);
 

@@ -14,7 +14,7 @@ int main()
       "Edit appointment",
       "Delete appointment",
       "Search appointment",
-      "Sort appointments",
+      //"Sort appointments",
       "List appointments",
       "Exit program"
   };
@@ -23,7 +23,7 @@ int main()
 
   do
   {
-    userChoice = GetMenu("Appointment manager V 0.2", menuItems, sizeof(menuItems) / sizeof(menuItems[0]));
+    userChoice = GetMenu("Appointment manager V 0.2", menuItems, sizeof(menuItems) / sizeof(menuItems[0]), 1);
 
     switch (userChoice)
     {
@@ -39,20 +39,22 @@ int main()
           EditAppointment();
           break;
       case 3:
-          printf("ToDo: ");
           DeleteAppointment();
           break;
       case 4:
           printf("ToDo: ");
           SearchAppointment();
           break;
-      case 5:
+      /*case 5:
           printf("ToDo: ");
           SortCalendar();
           break;
       case 6:
           ListCalendar();
-          break;
+          break;*/
+      case 5:
+        ListCalendar();
+        break;
 
       default:
           /* Could also handle wrong user input here instead of in menu.c cuz default would be exactly
@@ -67,9 +69,9 @@ int main()
 
           FreeCalendar();
 
-          return 0;
+          return EXIT_SUCCESS;
     }
   } while (userChoice);
 
-  return 0;
+  return EXIT_SUCCESS;
 }

@@ -2,7 +2,7 @@
 #include <string.h>
 #include "tools.h"
 
-int GetMenu(char * menuTitle, char * menuItems[], int countMenuItems)
+int GetMenu(char * menuTitle, char * menuItems[], int countMenuItems, unsigned short startAtZero)
 {
     if (!menuTitle || !menuItems || countMenuItems <= 0) return 0;
 
@@ -15,12 +15,12 @@ int GetMenu(char * menuTitle, char * menuItems[], int countMenuItems)
         printLine('=', titleLength);
         PrintNewLine(2);
 
-        for (int i = 0; i < countMenuItems; i++) printf("  %i. %s\n\n", i + 1, menuItems[i]);
+        for (int i = 0; i < countMenuItems; i++) printf("  %*d. %s\n", DigitCount(countMenuItems), i + startAtZero, menuItems[i]);
 
-        printf("Please enter your choice: ");
-        scanRes = scanf("%i", &userChoice);
+        printf("\nPlease enter your choice: ");
+        scanRes = scanf("%d", &userChoice);
         clearBuffer();
-        if (userChoice > countMenuItems || userChoice <= 0)
+        if (userChoice > countMenuItems || startAtZero && userChoice <= 0)
         {
             printf("\nNo option with that number! ");
             scanRes = 0;

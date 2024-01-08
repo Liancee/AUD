@@ -5,7 +5,8 @@
 /***************************************************************************
  *  This module contains methods for specifying in which way the appointments
  *  should be sorted. The only real sorting method for now is quick sort.
- * Detailed information about each method and its arguments will be provided seperately.
+ *  Detailed information about each method and its arguments will be provided
+ *  separately.
  ***************************************************************************/
 
   /***************************************************************************
@@ -29,7 +30,7 @@
    *      then if necessary in time and if still equivalent 0(equality) is returned
    *      and the while loop continues.
    *  Parameter:
-   *      - app1: the first appointments that is to compared to the other one
+   *      - app1: the first appointment that is to be compared to the other one
    *      - app2: the other appointment, that is compared to the first one
    *  Result: Returns -1 if the sort field of the first appointment is smaller
    *      than the second one, 0 if equal and -1 if greater.
@@ -45,7 +46,7 @@
    *      description then if necessary in date, then time and if still equivalent
    *      0(equality) is returned and the while loop continues.
    *  Parameter:
-   *      - app1: the first appointments that is to compared to the other one
+   *      - app1: the first appointment that is to be compared to the other one
    *      - app2: the other appointment, that is compared to the first one
    *  Result: Returns -1 if the sort field of the first appointment is smaller
    *      than the second one, 0 if equal and -1 if greater.
@@ -61,7 +62,7 @@
    *      description then if necessary in date, then time and if still equivalent
    *      0(equality) is returned and the while loop continues.
    *  Parameter:
-   *      - app1: the first appointments that is to compared to the other one
+   *      - app1: the first appointment that is to be compared to the other one
    *      - app2: the other appointment, that is compared to the first one
    *  Result: Returns -1 if the sort field of the first appointment is smaller
    *      than the second one, 0 if equal and -1 if greater.
@@ -77,7 +78,7 @@
    *      description then if necessary in date, then time and if still equivalent
    *      0(equality) is returned and the while loop continues.
    *  Parameter:
-   *      - app1: the first appointments that is to compared to the other one
+   *      - app1: the first appointment that is to be compared to the other one
    *      - app2: the other appointment, that is compared to the first one
    *  Result: Returns -1 if the sort field of the first appointment is smaller
    *      than the second one, 0 if equal and -1 if greater.

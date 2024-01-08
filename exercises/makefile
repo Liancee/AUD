@@ -1,6 +1,6 @@
 CC = gcc -Wall
 PRG = main
-OBJ = main.o menu.o calendar.o tools.o datetime.o database.o sort.o
+OBJ = main.o menu.o calendar.o tools.o datetime.o database.o sort.o list.o
 
 $(PRG): $(OBJ)
 	$(CC) -o $@ $^
@@ -11,7 +11,7 @@ main.o: main.c menu.h calendar.h tools.h database.h
 menu.o: menu.c menu.h tools.h
 	$(CC) -c $<
 
-calendar.o: calendar.c calendar.h tools.h datastructure.h datetime.h escapesequenzen.h menu.h sort.h
+calendar.o: calendar.c calendar.h tools.h datastructure.h datetime.h escapesequenzen.h menu.h sort.h list.h
 	$(CC) -c $<
 
 datetime.o: datetime.c datetime.h tools.h datastructure.h escapesequenzen.h
@@ -20,10 +20,13 @@ datetime.o: datetime.c datetime.h tools.h datastructure.h escapesequenzen.h
 tools.o: tools.c tools.h datetime.h escapesequenzen.h
 	$(CC) -c $<
 	
-database.o: database.c database.h tools.h datetime.h calendar.h escapesequenzen.h
+database.o: database.c database.h tools.h datetime.h calendar.h escapesequenzen.h list.h sort.h
 	$(CC) -c $<
 	
-sort.o: datastructure.h tools.h
+sort.o: sort.c sort.h tools.h
+	$(CC) -c $<
+
+list.o: list.c list.h
 	$(CC) -c $<
 
 clean:

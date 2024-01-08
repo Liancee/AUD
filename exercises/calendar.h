@@ -1,11 +1,13 @@
 #ifndef CALENDAR_H
   #define CALENDAR_H
 
-  extern const int appointmentsPerPage;
+  extern const int appointmentsPerPage, isEmptyTimeAllowed, maxDescriptionLength, isEmptyDescriptionAllowed, maxLocationLength, isEmptyLocationAllowed, isEmptyDurationAllowed;
 
   /***************************************************************************
-   *  This module contains methods to manipulate an appointment in many different ways.
-    Detailed information about each method and its arguments will be provided seperately.
+   *  This module contains methods to manipulate an appointment in many
+   *  different ways.
+   *  Detailed information about each method and its arguments will be provided
+   *  separately.
    ***************************************************************************/
 
   /***************************************************************************
@@ -46,7 +48,7 @@
    *  Parameter: None
    *  Result: void
    ***************************************************************************/
-  void SortCalendar();
+  // void SortCalendar();
 
   /***************************************************************************
    *  ListCalendar

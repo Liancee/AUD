@@ -234,3 +234,21 @@ int RaiseMallocException(char * varName)
 
   return 0;
 }
+
+int DigitCount(int num)
+{
+  int count = 0;
+
+  // Handle the case where the number is zero separately
+  if (num == 0) return 1;  // 0 has one digit
+
+  if (num < 0) num = -num; // For negative numbers, convert to positive before counting digits
+
+  while (num > 0)
+  {
+    num /= 10;
+    count++;
+  }
+
+  return count;
+}

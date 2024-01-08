@@ -2,8 +2,10 @@
   #define TOOLS_H
 
   /***************************************************************************
-   *  This module contains various methods and/or definitions which are used within exercises.
-    Detailed information about each method and its arguments will be provided separately.
+   *  This module contains various methods and/or definitions which are used
+   *  within exercises.
+   *  Detailed information about each method and its arguments will be provided
+   *  separately.
    ***************************************************************************/
 
   /***************************************************************************
@@ -62,7 +64,7 @@
    *  resetArray
    *  Sets every value in an array to 0.
    *  Parameter:
-   *      - a: Pointer to array which is to be nulled/reseted.
+   *      - a: Pointer to array which is to be zeroed/reset.
    *      - count: length of array.
    *  Result: void
    ***************************************************************************/
@@ -118,5 +120,14 @@
    *  Result: void
    ***************************************************************************/
   void fclearBuffer(FILE * file);
+
+/***************************************************************************
+ *  DigitCount
+ *  Counts the digits of a given integer.
+ *  Parameter:
+ *      - num: The number of which the digits should be counted and returned.
+ *  Result: Returns the digit count of the given number as integer.
+ ***************************************************************************/
+  int DigitCount(int num);
 
 #endif // TOOLS_H

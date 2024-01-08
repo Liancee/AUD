@@ -6,7 +6,6 @@
 #include "tools.h"
 
 // function declarations
-int isTimeValid(int, int, int);
 
 int GetDate(char * prompt, sDate * date)
 {
@@ -91,7 +90,7 @@ int GetDateFromString(char * input, sDate * date)
   year = atoi(pYear);
 
   // set the struct values with our variables if they are valid and return 1 else return 0
-  if (isDateValid(day, month, year))
+  if (IsDateValid(day, month, year))
   {
     date->Day = day;
     date->Month = month;
@@ -103,7 +102,7 @@ int GetDateFromString(char * input, sDate * date)
   return 0;
 }
 
-int isDateValid(int day, int month, int year)
+int IsDateValid(int day, int month, int year)
 {
   // Check for valid date even when it is a leap year
   // Check if the day, month, and year are within valid ranges
@@ -201,7 +200,7 @@ int GetTime(char * prompt, sTime * time, unsigned short isEmptyInputAllowed)
         isInputValid = 0;
       }
     }
-  } while (!isInputValid || !isTimeValid);
+  } while (!isInputValid || !IsTimeValid);
 
   free(input);
   input = NULL;
@@ -247,7 +246,7 @@ int GetTimeFromString(char * input, sTime * time)
 
 
   // set the struct values with our variables if they are valid and return 1 else return 0
-  if (isTimeValid(hour, min, sec))
+  if (IsTimeValid(hour, min, sec))
   {
     /*sTime t;
     t.Hours = hour;
@@ -266,7 +265,7 @@ int GetTimeFromString(char * input, sTime * time)
 }
 
 // Check if the hour, month, and Sec are within valid ranges
-int isTimeValid(int hour, int min, int sec)
+int IsTimeValid(int hour, int min, int sec)
 {
   return ((hour >= 0 && hour < 24) && (min >= 0 && min < 60) && (sec >= -1 && sec < 60));
 }

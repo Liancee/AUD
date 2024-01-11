@@ -52,7 +52,7 @@ int saveCalendar()
 
   fprintf(file, "<Calendar>\n");
 
-  while (pApp) // since day is a mandatory field and is validated (>1) we use this to go through every created appointment
+  while (pApp)
   {
     saveAppointment(*pApp, file);
 

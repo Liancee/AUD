@@ -1,0 +1,124 @@
+<Calendar>
+ <Appointment>
+  <Date>4.1.2024</Date>
+  <Time>17:45</Time>
+  <Description>AuD - Abgabe 6. Aufgabe</Description>
+  <Location>Raum D 114</Location>
+  <Duration>01:30</Duration>
+ </Appointment>
+ <Appointment>
+  <Duration>01:45</Duration>
+  <Location>Raum D 114</Location>
+  <Description>AuD Uebungsgruppe 2 - Vierte Uebungsaufgabe abgeben</Description>
+  <Time>17:45:00</Time>
+  <Date>30.11.2023</Date>
+ </Appointment>
+ <Appointment>
+  <Date>23.12.2023</Date>
+  <Time>16:00</Time>
+  <Description>noch schnell ein paar Geschenke kaufen</Description>
+  <Location>Einkaufszentrum</Location>
+  <Duration>04:00</Duration>
+ </Appointment>
+ <Appointment>
+  <Date>21.12.2023</Date>
+  <Time>17:45:00</Time>
+  <Description>AuD - Letzte Uebung in diesem Jahr</Description>
+  <Duration>01:30</Duration>
+  <Location>Raum D 114</Location>
+ </Appointment>
+ <Appointment>
+  <Location>Raum D 114</Location>
+  <Date>30.11.2023</Date>
+  <Time>19:30:0</Time>
+  <Description>AuD Nachsitzen</Description>
+  <Duration>1:0</Duration>
+ </Appointment>
+ <Appointment>
+  <Date>17.12.2023</Date>
+  <Time>23:00</Time>
+  <Description>kleines Nachtmahl</Description>
+  <Location>Kueche</Location>
+  <Duration>0:45</Duration>
+ </Appointment>
+ <Appointment>
+  <Date>14.12.2023</Date>
+  <Time>16:0</Time>
+  <Description>AuD Seminaristischer Unterricht</Description>
+  <Location>Raum D 136 (H5)</Location>
+  <Duration>1:30</Duration>
+ </Appointment>
+ <Appointment>
+  <Date>30.11.2023</Date>
+  <Time>15:10:00</Time>
+  <Description>Ausschlafen</Description>
+  <Description>zur Hochschule fahren</Description>
+ </Appointment>
+ <Appointment>
+  <Date>16.12.2023</Date>
+  <Time>06:00</Time>
+  <Description>Wecker ausschalten und weiterschlafen</Description>
+ </Appointment>
+ <Appointment>
+  <Date>17.12.2023</Date>
+  <Time>10:00</Time>
+  <Description>ausgiebiges Fruehstueck</Description>
+  <Location>Restaurant</Location>
+  <Duration>6:00</Duration>
+ </Appointment>
+ <Appointment>
+  <Date>4.1.2024</Date>
+  <Time>16:00</Time>
+  <Description>AuD - endlich wieder Seminaristischer Unterricht</Description>
+  <Location>Raum D 136 (H5)</Location>
+  <Duration>01:30</Duration>
+ </Appointment>
+ <Appointment>
+  <Date>17.12.2023</Date>
+  <Time>16:00</Time>
+  <Description>ueppiges Mittagessen</Description>
+  <Location>Restaurant</Location>
+  <Duration>4:00</Duration>
+ </Appointment>
+ <Appointment>
+  <Date>17.12.2023</Date>
+  <Time>20:00</Time>
+  <Description>reichhaltiges Abendessen</Description>
+  <Location>Restaurant</Location>
+  <Duration>2:30</Duration>
+ </Appointment>
+ <Appointment>
+  <Date>14.12.2023</Date>
+  <Time>18:50</Time>
+  <Description>Sandmaennchen</Description>
+  <Location>Vor'm Fernseher</Location>
+  <Duration>0:10</Duration>
+ </Appointment>
+ <Appointment>
+  <Date>6.12.2023</Date>
+  <Time>4:0</Time>
+  <Description>dem Nikolaus auflauern</Description>
+  <Location>Wohnzimmer</Location>
+  <Duration>2:00</Duration>
+ </Appointment>
+ <Appointment>
+  <Date>31.12.2023</Date>
+  <Time>20:00</Time>
+  <Description>Silvester-Party</Description>
+  <Location></Location>
+  <Duration></Duration>
+ </Appointment>
+ <Appointment>
+  <Date>1.12.2023</Date>
+  <Time>5:30</Time>
+  <Description>Erstes Tuerchen oeffnen</Description>
+  <Duration>0:05</Duration>
+ </Appointment>
+ <Appointment>
+  <Date>30.11.2023</Date>
+  <Time>16:00:00</Time>
+  <Description>AuD Seminaristischer Unterricht</Description>
+  <Duration>01:30</Duration>
+  <Location>Raum D 136 (H5)</Location>
+ </Appointment>
+</Calendar>

@@ -62,7 +62,7 @@ void CreateAppointment()
     }
   }
 
-  InsertInDList(app, Sort_date_time);
+  if(InsertInDList(app, Sort_date_time)) exit(EXIT_FAILURE);
 
   printf("\n  Appointment has been created!\n\n");
   waitForEnter("continue");

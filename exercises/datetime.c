@@ -16,7 +16,7 @@ int GetDate(char * prompt, sDate * date)
   }
 
   int isInputValid = 0, isDateValid = 0;
-  char * input = calloc(1, sizeof("dd.mm.yyyy"));
+  char * input = calloc(12, sizeof(char)); // 12 cuz we read user input with %11[^\n] which are 11 read chars + \0
   if (!input) return RaiseMallocException("input");
 
   PrintPrompt(prompt);
@@ -149,10 +149,8 @@ eDayOfTheWeek getDayOfWeek(int day, int month, int year)
 
 int GetTime(char * prompt, sTime * time, unsigned short isEmptyInputAllowed)
 {
-  // if (!time) return RaiseMallocException("time");
-
   int isInputValid = 0, isTimeValid = 0;
-  char * input = calloc(sizeof("hh:mm:ss"), sizeof(char));
+  char * input = calloc(9, sizeof(char)); // 9 cuz we read user input with %8[^\n] which are 8 read chars + \0
   if (!input) return RaiseMallocException("input");
 
   PrintPrompt(prompt);
@@ -200,7 +198,7 @@ int GetTime(char * prompt, sTime * time, unsigned short isEmptyInputAllowed)
         isInputValid = 0;
       }
     }
-  } while (!isInputValid || !IsTimeValid);
+  } while (!isInputValid || !isTimeValid);
 
   free(input);
   input = NULL;

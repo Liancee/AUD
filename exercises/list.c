@@ -1,11 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
+#include "tools.h"
+#include "search.h"
 
 sAppointment *First = NULL, *Last = NULL;
 
 int InsertInDList(sAppointment * new, int (*cmp_method)(sAppointment *, sAppointment *))
 {
+  if (!new) return (EXIT_FAILURE);
+
   sAppointment * tmp = First;
 
   if (!First)
@@ -68,6 +72,57 @@ sAppointment * RemoveFromDList(sAppointment * rm, int (*cmp_method)(sAppointment
       return tmp2;
     }
     tmp = tmp->Next;
+  }
+  return NULL;
+}
+
+int AppendInSList(sHashEntry * hashEntry, sAppointment * app)
+{
+  if (!hashEntry || !app) return (EXIT_FAILURE);
+
+  sListEntry * listEntry = malloc(sizeof(sListEntry));
+  if (!listEntry) return !RaiseMallocException("listEntry");
+  listEntry->Appointment = app;
+  listEntry->Next = NULL;
+
+  if (!hashEntry->First)
+  {
+    hashEntry->First = hashEntry->Last = listEntry;
+    return EXIT_SUCCESS;
+  }
+  else
+  {
+    hashEntry->Last = hashEntry->Last->Next = listEntry;
+    return EXIT_SUCCESS;
+  }
+}
+
+sListEntry * RemoveFromSList(sHashEntry * hashEntry, sAppointment * app)
+{
+  sListEntry * tmp = hashEntry->First;
+
+  if (hashEntry->First->Appointment == app)
+  {
+    hashEntry->First = hashEntry->Last = NULL;
+    return tmp;
+  }
+  else
+  {
+    sListEntry * previousListEntry = NULL;
+    while (tmp)
+    {
+      /* tmp is initialized with first and that is already checked for. So in the first iteration the if condition will ALWAYS be false
+       * and previousListEntry will be set to tmp, so the warnings in the if condition that tmp2 may be NULL is false */
+      if (tmp->Appointment == app)
+      {
+        sListEntry * tmp2 = previousListEntry;
+        if (tmp->Next) tmp2->Next = tmp->Next; // element is in the middle so previous one is connected with next one
+        else tmp2->Next = NULL; // element is at the end so previous one is now last
+        return tmp;
+      }
+      previousListEntry = tmp;
+      tmp = tmp->Next;
+    }
   }
   return NULL;
 }

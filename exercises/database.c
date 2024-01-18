@@ -8,6 +8,14 @@
 #include "escapesequenzen.h"
 #include "list.h"
 #include "sort.h"
+#include "search.h"
+
+/*#ifndef F_OK
+  #define F_OK = ;
+#endif*/
+/*#ifndef EEXIST
+  #define EEXIST = ;
+#endif*/
 
 #ifdef _WIN32
   #include <Windows.h>
@@ -96,7 +104,7 @@ FILE * createAndOpenXmlFile()
   char * fileMode = "wt";
 
 #ifdef _WIN32
-  if (!mkdir(dirName) || errno == EEXIST) // TODO needed to add constants F_OK and EEXIST?
+  if (!mkdir(dirName) || errno == EEXIST) // is windows handling sth differently on my teachers computer EEXIST/F_OK are not defined for him
   {
     file = openSaveFile(fileMode);
     if (!file) return NULL;
@@ -202,19 +210,30 @@ int loadCalendar()
         {
           appointment_sanitization(&app, line);
 
-          if (IsDateValid(app.Date.Day, app.Date.Month, app.Date.Year) && IsTimeValid(app.Time.Hours, app.Time.Minutes, app.Time.Seconds))
+          if (IsDateValid(app.Date.Day, app.Date.Month, app.Date.Year) && IsTimeValid(app.Time.Hours, app.Time.Minutes, app.Time.Seconds)) // why do this?
           {
             appointment = malloc(sizeof(sAppointment));
-            if (appointment) *(appointment) = app; //appointment = &app; // TODO what happens here exactly? address to dynamic pointer or dynamic pointer to address?
+            if (appointment) *(appointment) = app;
             else return RaiseMallocException("appointment");
           }
 
-          if(InsertInDList(appointment, Sort_date_time))
+          if (appointment)
           {
-            fprintf(stderr, "Critical error while trying to insert an appointment!\nProgram will now exit. ");
-            waitForEnter("exit");
-            return 0;
+            if(InsertInDList(appointment, Sort_date_time))
+            {
+              fprintf(stderr, "Critical error while trying to insert an appointment!\nProgram will now exit. ");
+              waitForEnter("exit");
+              return 0;
+            }
+            if (appointment->Description)
+              if(AppendInSList((HashTable + DivRest(appointment->Description)), appointment))
+              {
+                fprintf(stderr, "Critical error while trying to append an appointment to the hash list!\nProgram will now exit. ");
+                waitForEnter("exit");
+                return 0;
+              }
           }
+
           AppointmentCount++;
 
           // do not need below anymore after swapping to doubly linked list .. Sadge :(
@@ -427,7 +446,7 @@ int raiseAlreadyLoadedException(char * tag, unsigned short line)
 {
   char * filePath = GetFilePath();
   fprintf(stderr, "There was already a %s loaded for this appointment,\nperhaps there are two <%s> tags in line %d in one of your saved appointments?\n", tag, tag, line);
-  if(!askYesOrNo("Press [y/Y] to continue loading (the second entry is loaded) or [n/N] to exit the program. "))
+  if(!askYesOrNo("Press [y/Y] to continue loading (the second entry is loaded) or [n/N] to exit the program.\n\nYour choice: "))
   {
     printf("\nSave file location: %s\n", filePath);
     waitForEnter("continue");

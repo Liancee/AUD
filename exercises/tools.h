@@ -121,13 +121,24 @@
    ***************************************************************************/
   void fclearBuffer(FILE * file);
 
-/***************************************************************************
- *  DigitCount
- *  Counts the digits of a given integer.
- *  Parameter:
- *      - num: The number of which the digits should be counted and returned.
- *  Result: Returns the digit count of the given number as integer.
- ***************************************************************************/
+  /***************************************************************************
+   *  DigitCount
+   *  Counts the digits of a given integer.
+   *  Parameter:
+   *      - num: The number of which the digits should be counted and returned.
+   *  Result: Returns the digit count of the given number as integer.
+   ***************************************************************************/
   int DigitCount(int num);
+
+  /***************************************************************************
+  *  ToUpper
+  *  Converts a lower case character to a upper case character.
+  *  Parameter:
+  *      - c: The lower case character which is to be changed to upper case
+  *         and returned.
+  *  Result: Returns the as parameter given lower case char as upper case or
+  *     0 if the parameter given was not a lower case character (ascii 97-122).
+  ***************************************************************************/
+  char ToUpper(char c);
 
 #endif // TOOLS_H

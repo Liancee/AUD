@@ -5,6 +5,8 @@
    *  This module contains various data structures, enumerations.
    ***************************************************************************/
 
+  #define MAXINDEX 307
+
   extern int AppointmentCount;
 
   typedef enum
@@ -42,5 +44,18 @@
   } sAppointment;
 
   extern sAppointment *First, *Last;
+
+  typedef struct sLE
+  {
+    sAppointment * Appointment;
+    struct sLE * Next;
+  } sListEntry;
+
+  typedef struct
+  {
+    sListEntry * First, * Last;
+  } sHashEntry;
+
+  extern sHashEntry HashTable[MAXINDEX];
 
 #endif // DATASTRUCTURE_H

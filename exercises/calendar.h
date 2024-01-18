@@ -1,6 +1,8 @@
 #ifndef CALENDAR_H
   #define CALENDAR_H
 
+  #include "datastructure.h"
+
   extern const int appointmentsPerPage, isEmptyTimeAllowed, maxDescriptionLength, isEmptyDescriptionAllowed, maxLocationLength, isEmptyLocationAllowed, isEmptyDurationAllowed;
 
   /***************************************************************************
@@ -49,6 +51,14 @@
    *  Result: void
    ***************************************************************************/
   // void SortCalendar();
+
+  /***************************************************************************
+   *  ListHashTable
+   *  Lists the hash table.
+   *  Parameter: None
+   *  Result: void
+   ***************************************************************************/
+  void ListHashTable();
 
   /***************************************************************************
    *  ListCalendar

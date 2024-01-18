@@ -149,7 +149,8 @@ int GetText(char* prompt, int maxLen, char** text, int isEmptyInputAllowed)
 
   sprintf(format, "%%%i[^\n]", maxLen);
 
-  PrintPrompt(prompt);
+  if (prompt) PrintPrompt(prompt);
+
   STORE_POS;
 
   do
@@ -251,4 +252,10 @@ int DigitCount(int num)
   }
 
   return count;
+}
+
+char ToUpper(char c)
+{
+  if (c < 97 || c > 122) return c;
+  return c - 32; // ascii offset from lower to upper character (e.g. a=97, A=65)
 }

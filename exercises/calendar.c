@@ -9,12 +9,14 @@
 #include "menu.h"
 #include "sort.h"
 #include "list.h"
+#include "search.h"
 
+sHashEntry HashTable[MAXINDEX];
 int AppointmentCount = 0;
-
 const int appointmentsPerPage = 5, isEmptyTimeAllowed = 0, maxDescriptionLength = 100, isEmptyDescriptionAllowed = 1, maxLocationLength = 15, isEmptyLocationAllowed = 1, isEmptyDurationAllowed = 1;
 
 void printFunctionHeader(char *);
+void listOneAppointment(sAppointment *);
 char* getAppointmentDay(eDayOfTheWeek);
 void getDiffDates(sDate *, unsigned short *);
 char * add_time(sAppointment *);
@@ -34,7 +36,7 @@ void CreateAppointment()
     return;
   }*/
 
-  sAppointment * app = malloc(sizeof(sAppointment));
+  sAppointment * app = calloc(1, sizeof(sAppointment));
   if (!app) exit(EXIT_FAILURE);
 
   STORE_POS;
@@ -63,6 +65,7 @@ void CreateAppointment()
   }
 
   if(InsertInDList(app, Sort_date_time)) exit(EXIT_FAILURE);
+  if (app->Description) if(AppendInSList((HashTable + DivRest(app->Description)), app)) exit(EXIT_FAILURE);
 
   printf("\n  Appointment has been created!\n\n");
   waitForEnter("continue");
@@ -128,13 +131,59 @@ void DeleteAppointment()
 
 void SearchAppointment()
 {
-  printf("Search appointment\n\n");
-  waitForEnter("continue");
+  if (!AppointmentCount)
+  {
+    printFunctionHeader("Search appointment by description");
+    printLine('=', 77);
+    PrintNewLine(1);
+
+    printf("\n  There are no appointments to search for in the calendar! ");
+    waitForEnter("continue");
+    return;
+  }
+
+  printFunctionHeader("Search appointment by description");
+  printLine('=', 77);
+  printf("\n\n  Please enter the description of the appointment you are looking for:\n  -> ");
+
+  sAppointment app;
+  if (!GetText(NULL, maxDescriptionLength, &(app.Description), 0)) exit(EXIT_FAILURE);
+  sListEntry * result = searchFirst(HashTable, &app, Sort_description);
+  printf("\nSearchresult:\n");
+  printLine('-', strlen("Searchresult:"));
+  PrintNewLine(2);
+  printLine('=', 77);
+  PrintNewLine(2);
+  if (result)
+  {
+    listOneAppointment(result->Appointment);
+    while (result)
+    {
+      result = searchNext(HashTable, result->Appointment, Sort_description);
+      if (result) listOneAppointment(result->Appointment);
+    }
+  }
+  else printf("  No appointments were found that match the search criteria ...\n\n");
+  waitForEnter("return to the main menu");
 };
+
+void listOneAppointment(sAppointment * app)
+{
+  printf("%s, %02d.%02d.%04i\n", getAppointmentDay(app->Date.DayOfTheWeek), app->Date.Day, app->Date.Month, app->Date.Year);
+  printLine('-', 15);
+  PrintNewLine(1);
+
+  char * end_time = NULL;
+  if (app->Duration) end_time = add_time(app);
+  printf("  %02d:%02d %7s -> %-15s | ", app->Time.Hours, app->Time.Minutes, app->Duration ? end_time : " ", (app->Location) ? app->Location : "No location set");
+  printf(((app->Description ? strlen(app->Description) : 0) < 41) ? "%-40s" : "%-.36s ...", (app->Description) ? app->Description : "No description available ...");
+  PrintNewLine(2);
+  if (end_time) free(end_time);
+}
 
 /*void SortCalendar()
 {
-  if (!AppointmentCount) // No arms no cookies
+  if (!AppointmentCount)
   {
     printFunctionHeader("Sort appointments");
     printLine('=', 77);
@@ -179,8 +228,6 @@ void SearchAppointment()
 
 void ListCalendar()
 {
-  //clearScreen(); TODO
-
   if (!AppointmentCount) // No arms no cookies
   {
     printFunctionHeader("Appointment list");
@@ -236,7 +283,7 @@ void ListCalendar()
           printLine('=', 78);
           PrintNewLine(1);
 
-          printf("%s, %02d.%02d.%04i\n", getAppointmentDay(pDates->DayOfTheWeek), pDates->Day, pDates->Month, pDates->Year); // prints header for every different date
+          printf("%s, %02d.%02d.%04d\n", getAppointmentDay(pDates->DayOfTheWeek), pDates->Day, pDates->Month, pDates->Year); // prints header for every different date
           printLine('-', 15);
           PrintNewLine(1);
 
@@ -260,11 +307,11 @@ void ListCalendar()
         outputCount = 0;
         remainingDatesToBeDisplayed -= remainingDatesToBeDisplayed >= appointmentsPerPage ? appointmentsPerPage : remainingDatesToBeDisplayed;
         printf("\n");
-        int outputLen = strlen("show the next (%i) appointments");
+        int outputLen = strlen("show the next (%d) appointments");
         char * output = malloc(outputLen + 1);
         if (output)
         {
-          snprintf(output, outputLen, "show the next (%i) appointments", remainingDatesToBeDisplayed > appointmentsPerPage ? appointmentsPerPage : remainingDatesToBeDisplayed);
+          snprintf(output, outputLen, "show the next (%d) appointments", remainingDatesToBeDisplayed > appointmentsPerPage ? appointmentsPerPage : remainingDatesToBeDisplayed);
           waitForEnter(output);
           free(output);
           output = NULL;
@@ -280,7 +327,7 @@ void ListCalendar()
       pDates++;
       PrintNewLine(1);
       printLine('=', 78);
-      printf("\n%s, %02i.%02i.%04d\n", getAppointmentDay(pDates->DayOfTheWeek), pDates->Day, pDates->Month, pDates->Year); // prints header for every different date
+      printf("\n%s, %02d.%02d.%04d\n", getAppointmentDay(pDates->DayOfTheWeek), pDates->Day, pDates->Month, pDates->Year); // prints header for every different date
       printLine('-', 15);
       PrintNewLine(1);
     }
@@ -393,6 +440,49 @@ char * add_time(sAppointment * app)
   }
 }
 
+void ListHashTable()
+{
+  if (!AppointmentCount) // No arms no cookies
+  {
+    printFunctionHeader("Hash table");
+
+    printf("\n  As there are no appointments in the calendar, there is also no hash table! ");
+    waitForEnter("continue");
+    return;
+  }
+
+  printFunctionHeader("Hash table");
+  printf("  %10s | %-14s | %-7s | %-51s\n  ", "Hash value", "Date", "Time", "Appointment description");
+  printLine('-', 11);
+  printf("|");
+  printLine('-', 16);
+  printf("|");
+  printLine('-', 9);
+  printf("|");
+  printLine('-', 52);
+  PrintNewLine(1);
+
+  for (int i = 0; i < MAXINDEX; i++)
+  {
+    if (HashTable[i].First)
+    {
+      int isHashValuePrinted = 1;
+      sListEntry * lE = HashTable[i].First;
+      printf("  %10d | ", i + 1);
+      do
+      {
+        if (!isHashValuePrinted) printf("  %11s| ", "");
+        else isHashValuePrinted = 0;
+        printf("%s, %02d.%02d.%04d |  %02d:%02d  | ", getAppointmentDay(lE->Appointment->Date.DayOfTheWeek), lE->Appointment->Date.Day, lE->Appointment->Date.Month, lE->Appointment->Date.Year, lE->Appointment->Time.Hours, lE->Appointment->Time.Minutes);
+        printf(((lE->Appointment->Description ? strlen(lE->Appointment->Description) : 0) <= 51) ? "%-51s\n" : "%-.47s ...\n", (lE->Appointment->Description));
+        lE = lE->Next;
+      } while (lE);
+    }
+  }
+  PrintNewLine(2);
+  waitForEnter("return to main menu");
+};
+
 void FreeCalendar()
 {
   sAppointment * app = First, *appNext;
@@ -406,6 +496,10 @@ void FreeCalendar()
 
 void freeAppointment(sAppointment * app)
 {
+  sListEntry * listEntry = NULL;
+  if (app->Description) listEntry = RemoveFromSList((HashTable + DivRest(app->Description)), app);
+  if (listEntry) free(listEntry);
+
   if (app->Description) free(app->Description);
   if (app->Location) free(app->Location);
   if (app->Duration) free(app->Duration);

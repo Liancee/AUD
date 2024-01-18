@@ -16,6 +16,7 @@ int main()
       "Search appointment",
       //"Sort appointments",
       "List appointments",
+      "List hash table",
       "Exit program"
   };
 
@@ -30,7 +31,7 @@ int main()
       case 0:
           printf("Parameter error for GetMenu() method! Program will exit.");
           waitForEnter("continue");
-          return 0;
+          return EXIT_FAILURE;
       case 1:
           CreateAppointment();
           break;
@@ -42,18 +43,16 @@ int main()
           DeleteAppointment();
           break;
       case 4:
-          printf("ToDo: ");
           SearchAppointment();
           break;
       /*case 5:
-          printf("ToDo: ");
           SortCalendar();
-          break;
-      case 6:
-          ListCalendar();
           break;*/
       case 5:
         ListCalendar();
+        break;
+      case 6:
+        ListHashTable();
         break;
 
       default:
